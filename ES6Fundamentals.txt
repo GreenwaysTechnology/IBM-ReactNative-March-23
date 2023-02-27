@@ -422,5 +422,84 @@ if (a === b) {
 
 let c = (a === b) ? "a and b are equal" : "a and b are not equal"
 console.log(c)
+...................................................................................
+...................................................................................
+				Functions
+..................................................................................
+
+function is basic building block of javascript.
+//functions -
+
+//basic function delclaration and invocation
+
+function sayHello() {
+    console.log('Hello function')
+}
+sayHello()
+
+
+//function ars and parameters
+//a and b are args
+function add(a, b) {
+    let c = a + b
+    console.log(`The add result is ${c}`)
+}
+//10,10 are parameters
+add(10, 10)
+//
+let x = 10
+let y = 90
+add(x, y)
+.................
+
+//es 6 default args 
+function add(a = 0, b = 0) {
+    console.log(`a ${a} b ${b}`)
+    let c = a + b
+    console.log(`The add result is ${c}`)
+}
+add(10, 10)
+add() // no value is passed
+.............
+
+Returning value:
+function add(a = 0, b = 0) {
+    return a + b
+}
+console.log(`The result is ${add(10,10)}`)
+
+//returning value from the function 
+
+function add(a = 0, b = 0) {
+    return a + b
+}
+let c = add(10, 10)
+console.log(`c ${c}`)
+console.log(`c ${add(10, 10)}`)
+
+function doStuff() {
+    return // undefined
+}
+console.log(doStuff())
+
+//login
+// function login(userName = '', password = '') {
+//     if (userName === 'admin' && password === 'admin') {
+//         return 'Login Success'
+//     } else {
+//         return 'Login Failed'
+//     }
+// }
+function login(userName = '', password = '') {
+    return (userName === 'admin') && (password === 'admin') ? "Login Success" : "Login failed"
+}
+console.log(login('admin', 'admin'))
+
+
+
+
+
+
+
 
 
