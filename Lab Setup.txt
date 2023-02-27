@@ -1,0 +1,16 @@
+
+ES 6  Fundamentals
+React and Redux for React native
+React Native - Windows -Android Platform.
+  -Core React Native
+  -Expo framework
+.....................................................................................
+
+Lab setup:
+.........
+
+ES 6  Fundamentals
+React and Redux for React native
+
+Node.js
+vs code.
