@@ -494,6 +494,739 @@ function login(userName = '', password = '') {
     return (userName === 'admin') && (password === 'admin') ? "Login Success" : "Login failed"
 }
 console.log(login('admin', 'admin'))
+....................................................................................
+
+.....................................................................................
+			Objects
+.....................................................................................
+Js is object based language.
+
+How to create objects?
+
+1.Constructor pattern
+  es 5 way - function
+  es 6 way - class
+2.literal Patterns
+  no class,no functions
+
+
+ES 5 functions
+//object template.
+
+function Employee(id = 0, name = 'default', salary = 0) {
+    //instance variables
+    this.id = id
+    this.name = name
+    this.salary = salary
+    //instance methods
+    this.calculateSalary = (noOfdays) => {
+        return this.salary * noOfdays
+    }
+}
+//create object  
+//emp is reference variable
+//new is operator
+//Employee() , constructor call 
+let emp = new Employee(12, 'Subramanian', 1000)
+console.log(`id ${emp.id} ${emp.name} ${emp.calculateSalary(100)}`)
+
+.....................................................................................
+
+class Based:
+//object template.
+
+// function Employee(id = 0, name = 'default', salary = 0) {
+//     //instance variables
+//     this.id = id
+//     this.name = name
+//     this.salary = salary
+//     //instance methods
+//     this.calculateSalary = (noOfdays) => {
+//         return this.salary * noOfdays
+//     }
+// }
+
+class Employee {
+    constructor(id = 0, name = 'default', salary = 0) {
+        //instance variables
+        this.id = id
+        this.name = name
+        this.salary = salary
+    }
+    //instance methods
+    // calculateSalary = (noOfdays) => {
+    //     return this.salary * noOfdays
+    // }
+    calculateSalary(noOfdays) {
+        return this.salary * noOfdays
+    }
+}
+//create object  
+//emp is reference variable
+//new is operator
+//Employee() , constructor call 
+let emp = new Employee(12, 'Subramanian', 1000)
+console.log(`id ${emp.id} ${emp.name} ${emp.calculateSalary(100)}`)
+....................................................................................
+				Code Reuse - Hierachy
+
+There are two types of hierachy
+
+1.IS-A - inheritance
+   es 5 inheritance -  prototype based inheritance
+   es 6 inheritance - class based inheritance.
+2.HAS-A -compostion
+
+//base class
+class Account {
+    constructor() {
+        console.log('Account ')
+    }
+    //methods
+    deposit() {
+        return 10
+    }
+    withdraw() {
+        return 50
+    }
+}
+
+//derived
+class SavingsAccount extends Account {
+    constructor() {
+        super()
+        console.log('SavingsAccount ')
+    }
+    //override
+    deposit() {
+        return 10 * super.deposit()
+    }
+    withdraw() {
+        return 20 * super.withdraw()
+    }
+}
+
+let sb = new SavingsAccount()
+console.log(sb.deposit())
+console.log(sb.withdraw())
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//literal objects 
+let customer = {
+    id: 1,
+    name: 'Subramanian',
+    city: 'Coimbatore'
+}
+console.log(customer.id, customer.name, customer.city)
+customer.id = 90
+customer.name = 'ram'
+console.log(customer.id, customer.name, customer.city)
+
+//complex literal : has -a : object has other objectPosition: 
+
+let person = {
+    id: 1,
+    name: 'Subramanian',
+    address: {
+        street: '10th street',
+        city: 'Coimbatore'
+    }
+}
+console.log(person.id, person.name, person.address.city)
+....................................................................................
+				Object Destructuring - es 6 feature
+.................................................................................
+
+How to pass object as parameter to function and print?
+
+
+function displayEmployee(employee) {
+
+    //print employee
+    console.log(`id ${employee.id}`)
+    console.log(`name ${employee.name}`)
+    console.log(`salary ${employee.salary}`)
+    console.log(`city ${employee.address.city}`)
+
+}
+
+//pass object as parameter
+displayEmployee({ id: 1, name: 'Subramanian', salary: 2000, address: { city: 'Coimbatore' } })
+
+let emp = {
+    id: 1,
+    name: 'Subramanian',
+    salary: 2000,
+    address: {
+        city: 'Coimbatore'
+    }
+}
+displayEmployee(emp)
+.....................................................................................
+
+Simple Destructuring:
+
+function displayEmployee(employee) {
+    //de structure the object properties into local variables
+    const { id, name, salary, address: { city } } = employee
+    //print employee
+    console.log(`id ${id}`)
+    console.log(`name ${name}`)
+    console.log(`salary ${salary}`)
+    console.log(`city ${city}`)
+}
+
+//pass object as parameter
+displayEmployee({ id: 1, name: 'Subramanian', salary: 2000, address: { city: 'Coimbatore' } })
+
+let emp = {
+    id: 1,
+    name: 'Subramanian',
+    salary: 2000,
+    address: {
+        city: 'Coimbatore'
+    }
+}
+displayEmployee(emp)
+...
+
+Arg Destructuring:
+function displayEmployee({ id, name, salary, address: { city } }) {
+    console.log(`id ${id}`)
+    console.log(`name ${name}`)
+    console.log(`salary ${salary}`)
+    console.log(`city ${city}`)
+}
+
+//pass object as parameter
+displayEmployee({ id: 1, name: 'Subramanian', salary: 2000, address: { city: 'Coimbatore' } })
+
+let emp = {
+    id: 1,
+    name: 'Subramanian',
+    salary: 2000,
+    address: {
+        city: 'Coimbatore'
+    }
+}
+displayEmployee(emp)
+
+
+...
+arrow version
+......................
+
+const displayEmployee = ({ id, name, salary, address: { city } }) => {
+    console.log(`id ${id}`)
+    console.log(`name ${name}`)
+    console.log(`salary ${salary}`)
+    console.log(`city ${city}`)
+}
+..................................................................................
+			 Dynamic object population and deStructuring
+				  (Returing object)
+...................................................................................
+
+How to return object from the function
+
+function getStock() {
+    //return object
+    return {
+        id: 1,
+        symbol: 'google',
+        qty: 100,
+        price: 10000
+    }
+}
+console.log(getStock())
+
+i want to return object with dynamic values
+
+function getStock(id = 1, symbol = 'google', qty = 0, price = 0) {
+    //return object
+    return {
+        id: id,
+        symbol: symbol,
+        qty: qty,
+        price: price
+    }
+}
+console.log(getStock(100, 'Meta', 1000, 18900))
+console.log(getStock())
+
+De Structuring and dynamic values:
+.................................
+function getStock(id = 1, symbol = 'google', qty = 0, price = 0) {
+    //key:value
+    //instanceVariable:localvariable
+    //if both variable are same ; id:id => we can remove one 
+    return {
+        id,
+        symbol,
+        qty,
+        price
+    }
+}
+console.log(getStock(100, 'Meta', 1000, 18900))
+console.log(getStock())
+
+arrow version:
+const getStock = (id = 1, symbol = 'google', qty = 0, price = 0) => {
+    return {
+        id,
+        symbol,
+        qty,
+        price
+    }
+}
+console.log(getStock(100, 'Meta', 1000, 18900))
+console.log(getStock())
+
+...
+
+arrow with simplified notation:
+const getStock = (id = 1, symbol = 'google', qty = 0, price = 0) => ({
+        id,
+        symbol,
+        qty,
+        price
+})
+console.log(getStock(100, 'Meta', 1000, 18900))
+console.log(getStock())
+.....................................................................................
+			Async Programming
+.....................................................................................
+
+The async programming is all about not to block the current thread which executes the instructions, instead we need to schdule the long running tasks like io operations,socket operations,cpu intensive tasks.
+
+Javascript by default supports async programming,because js has single event loop thread(main thread),so long running tasks need to be isloated from the main thread.
+
+Js has implemented event driven programming pattern to listen for events of long running tasks from the kernal.
+
+js attaches a function called "callback" for grabbing the events along with data.
+
+
+
+How to implement async programming?
+1.Using js high level async apis - like timers,ajax,websocket,dom apis....
+2.Inside programm we need to register listener called callback function.
+
+Styles of async programming:
+1.callback style
+2.promise style
+3.promise with async and await style
+4.outside js lang called reactive programming - rxjs
+
+
+callback style is very core style without which we cant implement async programming.
+
+//async programming using callbacks:
+
+function sayGreet(message) {
+    console.log(message)
+}
+function delay(callback) {
+    //wrap inside async api 
+    setTimeout(callback, 5000,'i am delayed response')
+}
+
+function main() {
+    sayGreet('hello')
+    //passing function is called "listener / callback functions"
+    delay(data => {
+        console.log('delay',data)
+    })
+    sayGreet('hai')
+}
+main()
+////////////////////////////////////////////////////////////////////////////////////
+			 Async composition - callback nesting
+...................................................................................
+
+What if the output of one api will be input to another another api.
+Sync style
+ const result1 = api1()
+ const result2 = api2(result1)
+//callback nesting
+
+const getUser = (resolve, reject) => {
+    let user = {
+        name: 'admin',
+        password: 'admin'
+    }
+    //user = null
+    if (user) {
+        setTimeout(resolve, 1000, user)
+    } else {
+        setTimeout(reject, 1000, { message: 'User not found' })
+    }
+}
+
+const login = (user, resolve, reject) => {
+    //user = null
+    if (user.name === 'admin' && user.password === 'admin') {
+        setTimeout(resolve, 1000, 'login success')
+    } else {
+        setTimeout(reject, 1000, 'login failed')
+    }
+}
+
+const showDashbaord = (status, resolve, reject) => {
+    //user = null
+    if (status === 'login success') {
+        setTimeout(resolve, 1000, 'Admin Page')
+    } else {
+        setTimeout(reject, 1000, 'Guest Page')
+    }
+}
+getUser(user => {
+    console.log(user)
+    //call login 
+    login(user, status => {
+        console.log(status)
+        showDashbaord(status, adminPage => {
+            console.log(adminPage)
+        }, guestPage => {
+            console.log(guestPage)
+        })
+    }, err => console.log(err))
+}, err => {
+    console.log(err)
+})
+...................................................................................
+			  Callback Hell
+....................................................................................
+
+getUser(user => {
+    console.log(user)
+    //call login 
+    login(user, status => {
+        console.log(status)
+        showDashbaord(status, adminPage => {
+            console.log(adminPage)
+        }, guestPage => {
+            console.log(guestPage)
+        })
+    }, err => console.log(err))
+}, err => {
+    console.log(err)
+})
+
+By looking this code, you can ask few questions
+
+1.whether this code is able debug?
+2.whether this code is able understand
+3.whether this code is able scale
+
+No - This is called as callback hell.
+
+How to solve the callback hell Problem?
+  Using the design pattern and implementation called "promises"
+....................................................................................
+			Promise
+
+It is design pattern and implementation to solve/simplify the complex callbacks.
+
+Since Promise is Object which has lot of methods.
+Promise object is created by using two patterns
+....................................................................................
+
+		Promise Implemenation: Object Object creations
+...................................................................................
+
+1. Create Promise Object from Promise contructor
+      new Promise()
+2. Create Promise object from factory apis 
+      Promise.resolve() / Promise.reject()
+
+Promise object methods:
+
+1.then - success
+2.catch - errors
+3.finally - clean up
+
+factory api to create Promise object
+4.resolve
+5.reject
+.......................................
+6.all
+7.race
+
+Promises are by default async because it has implemented timer with 0 ms.
+//Promise With factory apis 
+
+const login = (userName, password) => {
+    if (userName === 'admin' && password === 'admin') {
+        return Promise.resolve('login success')
+    } else {
+        return Promise.reject('login failed')
+    }
+}
+
+//what if i want to wrap existing callback apis into promises : explicit timer 
+
+const auth = (userName, password) => {
+    return new Promise((resolve, reject) => {
+        if (userName === 'admin' && password === 'admin') {
+            setTimeout(resolve, 1000, 'login success')
+        } else {
+            setTimeout(reject, 1000, 'login failed')
+
+        }
+    })
+}
+
+function main() {
+    login('admin', 'admin')
+        .then(status => console.log(status))
+        .catch(err => console.log(err))
+        
+    auth('admin', 'admin')
+        .then(status => console.log(status))
+        .catch(err => console.log(err))
+}
+main()
+....................................................................................
+				Promise Hell
+..................................................................................
+Multi thens makes code more complex to read,maintain,debug-Promise hell.
+
+How to solve the Promise Hell?
+
+Using async await keywords...
+
+Async ...await keywords:
+
+1.async keyword is used infront of function declaration- async function
+2.async functions by default return promise with success result always
+2.async functions can wrap expclit apis with promise.
+
+//async function 
+async function getValue() {
+    return 10 // Promise.resolve(10)
+}
+function main() {
+    console.log(getValue())
+}
+main()
+.....................................................................................
+
+//promise chaning --sovling callback hell
+
+const getUser = () => {
+    console.log('getUser is called')
+    let user = {
+        name: 'admin'
+    }
+    //user = undefined
+    let error = {
+        message: 'User not Found'
+    }
+    return new Promise((resolve, reject) => {
+        if (user) {
+            setTimeout(resolve, 100, user)
+        } else {
+            setTimeout(reject, 100, error)
+        }
+    })
+}
+
+const login = user => {
+    console.log('login is called')
+    return new Promise((resolve, reject) => {
+        if (user.name === 'admin') {
+            setTimeout(resolve, 100, 'Login Success')
+        } else {
+            setTimeout(reject, 100, 'Login Failed')
+        }
+    })
+}
+const dashboard = status => {
+    return new Promise((resolve, reject) => {
+        if (status === 'Login Success') {
+            setTimeout(resolve, 100, 'Admin Page')
+        } else {
+            setTimeout(reject, 100, 'Guest Page')
+        }
+    })
+}
+
+async function main() {
+    // getUser()
+    //     .then(user => login(user))
+    //     .then(status => dashboard(status))
+    //     .then(page => console.log(page))
+    //     .catch(err => console.log(err))
+
+    try {
+        const user = await getUser()
+        const status = await login(user)
+        const page = await dashboard(status)
+        console.log(user, status, page)
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+main()
+.....................................................................................
+				ES 6 module design pattern
+
+How to share code? and how to link files?
+
+code:
+ variables with any literals
+ class
+ objects
+ arrays
+ functions
+
+Code sharing keywords
+
+export 
+export default
+
+linking files and import
+
+import
+......
+export :
+=> export can be used to "share many variables" from the single file - multi sharing
+when you export ? you can import things from the other files using
+  destructuring syntax.
+
+import {} from 'fileName'
+
+
+Note:
+ Web browsers do not support "es 6 module" directly.
+
+How to run modular code?
+
+1.Using build tools
+2.Using modern browser configuration
+
+Using build tools:
+.................
+webpack
+
+How to install webpack in our project?
+
+Steps:
+
+1.make sure that you have package.json file
+ if not , create package.json file
+
+npm init  --yes
+
+2.install webpack
+  npm install webpack webpack-cli --save-dev
+
+3.add webpack.config.js in the project root dir
+
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.js',
+  mode:'development',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+  },
+};
+
+4.build /bundle your code
+ open package.json
+ add entry into scripts
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc",
+    "build": "webpack --watch"
+  },
+
+5.start bundling
+  open cmd and run the following command
+npm run build
+
+> es6-apps@1.0.0 build
+> webpack
+
+asset bundle.js 5.19 KiB [emitted] (name: main)
+runtime modules 670 bytes 3 modules
+cacheable modules 758 bytes
+  ./src/index.js 146 bytes [built] [code generated]
+  ./src/mylib.js 612 bytes [built] [code generated]
+webpack 5.70.0 compiled successfully in 113 ms
+
+6.add bundle file inside index.html
+     <script src="dist/bundle.js"></script>
+
+
+
+eg:
+src/util.js
+//declare some variables
+
+// export const name = 'Subramanian'
+// export const city = 'Coimbatore'
+// export const salary = 9000
+// export const status = true
+// export const greet = () => 'hello'
+// export const skills = ['react', 'mobile']
+
+const name = 'Subramanian'
+const city = 'Coimbatore'
+const salary = 9000
+const status = true
+const greet = () => 'hello'
+const skills = ['react', 'mobile']
+
+export { name, city, salary, status, greet, skills }
+
+src/index.js
+import { name,city,status,skills,greet } from "./util";
+
+console.log(name,city)
+console.log(status)
+console.log(skills)
+console.log(greet())
+..
+src/services/user.service.js
+
+
+// export default class TodoService {
+//     constructor() {
+
+//     }
+//     //
+//     list() {
+//         return [{ id: 1, name: 'subramanian' }]
+//     }
+// }
+
+class UserService {
+    constructor() {
+
+    }
+    //
+    list() {
+        return [{ id: 1, name: 'subramanian' }]
+    }
+}
+export default UserService;
+
+src/index.js
+import  UserService  from "./services/user.service";
+
+let userService = new UserService()
+console.log(userService.list())
+
+
+
+
+
+
+
 
 
 
