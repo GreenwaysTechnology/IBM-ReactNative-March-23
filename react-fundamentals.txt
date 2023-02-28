@@ -1,0 +1,114 @@
+				   React Native
+.....................................................................................
+
+What is React  Native?
+  React Native is lib built for mobile cross platform native mobile apps.
+React native has been built on the core concepts of react.js.
+
+
+What is React.js?
+ React.js is javascript lib for building user interfaces.
+ User interface apps for web browsers.
+ "React is modern SPA lib created by face book based on "Flux Design Pattern"
+
+
+Architecture for libs and frameworks:
+
+
+Plain JS
+			 Application(dom) -plain js
+			     |
+			  Javascript Engine
+			      |
+			  Browser Engine
+
+
+
+
+Framework/lib
+			 Application(JQuery)
+			     |
+		       ---------------------------
+			  JQuery Engine	------javascript programming		
+                       -------------------------------
+			      |
+			 Javascript Engine
+			      |
+			  Browser Engine
+
+
+
+What is jquery engine?
+  Jquery engine is also javascript program.
+
+
+
+
+                             Angular
+			 Application(Angular)
+			     |
+		       ---------------------------
+			  Angular Engine : Renderer(Ng2) Renderer2(Ng4,5),Ivy(6,7)		               -------------------------------
+			      |
+			 Javascript Engine
+			      |
+			  Browser Engine
+
+React
+
+
+		         Application(React)
+			     |
+		       ---------------------------
+	              React Engine :React fiber-->React 16 on wards		
+                       -------------------------------
+			      |
+			 Javascript Engine
+			      |
+			  Browser Engine
+...................................................................................
+				React Future
+.....................................................................................
+
+React was built by face book only for web browsers, later facebook decided to scale react for building other types of user interfaces application (mobile,iot applications).
+
+React can be used to build application for 
+........................................
+1.browsers : Desktop -  react js
+2.Mobile Apps : React Native
+
+face book is working on many futures projects related to react
+3.React VR : Virtual Reality.
+4.React Car : For car applications
+5.React TV  : React for TV.
+6.React IOT : any devices
+
+.............................................................................................
+				Setup React Project
+..............................................................................................
+
+Create React App - tool to setup project
+https://create-react-app.dev/
+
+Two ways of setting project 
+
+via npm global modules
+via npx modules
+
+via npm:
+
+Install tool:
+
+open cmd:
+
+install tool first
+
+npm install create-react-app -g
+
+create a app
+create-react-app my-app
+
+Create project directly without installing create-react-app tool
+
+npx create-react-app my-app
+.....................................................................................
