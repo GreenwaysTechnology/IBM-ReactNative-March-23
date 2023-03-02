@@ -17,25 +17,12 @@ class Counter extends React.Component {
     }
     //listener declaration
     onIncrement = () => {
-        // this.state.counter++
-        // console.log('state =>', this.state)
-        //we should not call render method explcitly, if you do so, there is no impact on ui render.
-        //we need to tell react engine to trigger render cycle.
-        //this.render()
-        //we need to use setState method 
-        this.setState(previousState => {
-            console.log('Previous State /Old State =>', previousState)
-            //You must return immutable object
-            // return {
-            //     counter: previousState.counter + 1
-            // }
-            // return Object.assign({}, previousState, { counter: previousState.counter + 1 })
-            return { ...previousState, counter: previousState.counter + 1 }
-        })
+        console.log('button clicked')
     }
 
     render() {
-        console.log('Current State => ', this.state)
+
+        console.log('state => ', this.state)
         return <div>
             <h1>Counter App -State </h1>
             <h2>Counter {this.state.counter} </h2>
@@ -44,6 +31,8 @@ class Counter extends React.Component {
         </div>
     }
 }
+
+
 
 const App = () => {
     return <>

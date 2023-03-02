@@ -1632,10 +1632,244 @@ const rootElement = ReactDOM.createRoot(document.getElementById('root'))
 
 rootElement.render(<App />)
 
+...................................................................................
+				State
+
+What is state?
+ State is another way of passing data.
+ if data is changed, we need to rerender UI
+
+State is represented inside class component by default...
+Even we can represent state inside functions as well...
+
+The state contains data specific to this component that may change over time. The state is user-defined, and it should be a plain JavaScript object.
+
+Eg:
+ Level-1  How to declare state,bind state in ui?
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+const style = {
+    textAlign: 'center',
+}
+//state 
+class Rating extends React.Component {
+    //state declaration
+    state = {
+        rating: 0
+    }
+
+    render() {
+        console.log(this.state)
+        return <div >
+            <h1 style={style}>Rating App</h1>
+            <div>
+                <h2>Rating : {this.state.rating}</h2>
+            </div>
+        </div>
+    }
+}
+
+const App = () => {
+    return <>
+        <Rating />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+...................................................................................
+			 How to trigger render cycle
+
+React offers a method called "setState".
+
+in order to understand setState, we need to learn the functional programming principle called "Pure functions and immutablity"
+...................................................................................
+                              Pure Functions
+
+Rule A:
+  If function receives input, the function returns the same input without any mutation.
+  Every Component with respect to props, are pure functions.
+
+//pure function
+//Rule 1: if function receives input,it returns the same, that function is called pure function.
 
 
+//This function is pure function 
+function getData(message) {
+    return message
+}
+console.log(getData('hello'))
+
+//impure function 
+function update(message) {
+    message = "test"
+    return message
+}
+console.log(update('something'))
 
 
+Where is this pure function is used?
+  In React Every component is pure function with subject to props.
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+//pure function : the input parameters(props) are not modified rather just we return
+//according to props every component is pure function
+const Greeting = props => {
+   // props.message = "hai"
+    return <div>
+        <h1>Message {props.message}</h1>
+    </div>
+}
+
+
+const App = () => {
+    return <>
+        <Greeting message="hello" />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+Rule B:
+
+ What if function receives input, need to be mutated but it should follow the pure function rule.
+
+With help of "Immutablity"
+
+What is immutable?
+
+creating new object every time when you update the object , immutablity.
+
+if the function does that , that function is called pure function.
+
+pure function must return, "immutable object".
+
+//Pure function Rule B
+
+//impure function
+function updateCustomer(customer, city) {
+    //city 
+    customer.city = city
+    return customer
+
+}
+
+let customer = {
+    id: 1,
+    name: 'Subramanian',
+    city: 'Delhi'
+}
+console.log('before update', customer)
+let result = updateCustomer(customer, 'Coimbatore')
+console.log('after update', result)
+console.log('same customer ', customer === result ? 'same' : 'different')
+..................................................................................
+				Pure and Immutable
+//Pure function Rule B
+
+//impure function
+function updateCustomer__(customer, city) {
+    //city 
+    customer.city = city
+    return customer
+}
+
+//pure function : using immutable objects 
+//immutable object , you have to create new object for any changes
+//way -1
+// function updateCustomer(customer, city) {
+//     return {
+//         id: customer.id,
+//         name: customer.name,
+//         city: city
+//     }
+// }
+// //way 2- Object.assign - clone api to clone safely of existing object
+// function updateCustomer(customer, city) {
+//     return Object.assign({}, customer, { city: city })
+// }
+
+//way 3: Using spread operator(es 7 )feature to clone the object  ... 
+//way 2- Object.assign - clone api to clone safely of existing object
+function updateCustomer(customer, city) {
+    //return { ...customer, city: city }
+    return { ...customer, city }
+
+}
+
+
+let customer = {
+    id: 1,
+    name: 'Subramanian',
+    city: 'Delhi'
+}
+console.log('before update', customer)
+....................................................................................
+
+import ReactDOM from "react-dom/client";
+import React from "react";
+
+
+//Class component which declares state:
+/**
+ * props are data which are sent from parent to child 
+ * state are data which are encapuslated within component
+ * 
+ */
+class Counter extends React.Component {
+
+    //declare state for this component
+    state = {
+        //component specific data
+        counter: 0 // initial state
+    }
+    //listener declaration
+    onIncrement = () => {
+        // this.state.counter++
+        // console.log('state =>', this.state)
+        //we should not call render method explcitly, if you do so, there is no impact on ui render.
+        //we need to tell react engine to trigger render cycle.
+        //this.render()
+        //we need to use setState method 
+        this.setState(previousState => {
+            console.log('Previous State /Old State =>', previousState)
+            //You must return immutable object
+            // return {
+            //     counter: previousState.counter + 1
+            // }
+            // return Object.assign({}, previousState, { counter: previousState.counter + 1 })
+            return { ...previousState, counter: previousState.counter + 1 }
+        })
+    }
+
+    render() {
+        console.log('Current State => ', this.state)
+        return <div>
+            <h1>Counter App -State </h1>
+            <h2>Counter {this.state.counter} </h2>
+            {/* Event Binding */}
+            <button onClick={this.onIncrement}>+</button>
+        </div>
+    }
+}
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
 
 
 
