@@ -1086,60 +1086,551 @@ rootElement.render(<Heading />)
 
 https://www.w3schools.com/cssref/index.php
 .....................................................................................
-.........
-				How to Style components
+				Dynamic UI- Data binding
+.....................................................................................
+
+.....................................................................................
+			  Compoent Design Principles of React
+.....................................................................................
+
+
+Data can be declared for a component in two ways.
+
+1.data is supplied from outside the component.
+2.data is supplied within the component
+
+1.Data is supplied from outside the component.
+
+When component receives data from the outside, this pattern is called as "property pattern" / props pattern.
+
+Outside the component means what? What is outside for the component?
+
+YOu know very well , react creates components and assembles them in hierachical order(tree)
+in the tree model, the one component called as "parent" component and other components are called child component and sibiling components.
+
+outside means "Parent".
+
+    "Data is supplied from the parent compoent to child component" - Props pattern /Property pattern
+
+const Greeter = props => {
+    const { message, name } = props
+    return <>
+        <h2>Child Component</h2>
+        <h3>{message} {name}</h3>
+    </>
+}
+.....................................................................................
+			What if i dont supply Props to Component -Default Props
+.....................................................................................
+if you dont pass any property, we can supply default props which saves lot of runtime bugs.
+
+When you design component, it is highly recommended to have default Props- This is best Practice
 ..............................................................................................
+			What if i dont supply Props to Component -Default Props
+.............................................................................................
+if you dont pass any property, we can supply default props which saves lot of runtime bugs.
 
-CSS integration:
-................
+When you design component, it is highly recommended to have default Props- This is best Practice
 
-How to add css to an html element?
+//default Args
+function multiply(a = 0, b = 0) {
+    console.log(`a ${a} b ${b}`)
+    return a * b; //NaN
+}
+console.log(multiply(6, 3))
+console.log(multiply())
 
-=> using class attribute  - external style
-=> using style attribute - inline
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-HTML :
-<div class="container">
+const User = props => {
+    const { id, name, status, address: { city } } = props
+    return <>
+        <h1>Id {id}</h1>
+        <h1>Name {name}</h1>
+        <h1>Status {status ? "Available" : "Not Available"}</h1>
+        <h1>City {city}</h1>
+    </>
+}
 
-</div>
+//setting default properties
+User.defaultProps = {
+    id: 0,
+    name: 'Your Name',
+    status: false,
+    address: {
+        city: 'Your city '
+    }
+}
 
-<div style="background-color:red">
 
-</div>
+const App = () => {
+    let status = false
+    let address = {
+        city: 'Coimbatore'
+    }
+    return <>
+        <User />
+        <User id={1} name="Subramanian" status={true} />
 
-HTML ATTRIBUTES And JSX:
+    </>
+}
 
- We cant /should not add html attributes directly in jsx code.
- JSX uses certain rules for adding html attributes.
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
 
- "Since JSX is closer to JavaScript than to HTML, React DOM uses "camelCase property naming convention" instead of HTML attribute names"
+rootElement.render(<App />)
+..................................................................................
+				Props Drilling
+...................................................................................
 
-For example, class becomes className in JSX, and tabindex becomes tabIndex.
+The User interface must be broken into compoents and again which should be broken into child compoents.
+import ReactDOM from "react-dom/client";
 
-<div className="container" tabIndex>
+const USER = {
+    id: 1,
+    name: "Leanne Graham",
+    username: "Bret",
+    email: "Sincere@april.biz",
+    address: {
+        street: "Kulas Light",
+        suite: "Apt. 556",
+        city: "Gwenborough",
+        zipcode: "92998-3874",
+        geo: {
+            lat: "-37.3159",
+            lng: "81.1496"
+        }
+    },
+    phone: "1-770-736-8031 x56442",
+    website: "hildegard.org",
+    company: {
+        name: "Romaguera-Crona",
+        catchPhrase: "Multi-layered client-server neural-net",
+        bs: "harness real-time e-markets"
+    }
+}
 
-</div>
+export const Address = props => {
+    return <>
+        <h3>Address</h3>
+        <p>Street {props.address.street}</p>
+        <p>Street {props.address.suite}</p>
+        <p>Street {props.address.city}</p>
+        <p>Street {props.address.zipcode}</p>
+    </>
+}
+export const Location = props => {
 
-List of jsx attributes:
-accept acceptCharset accessKey action allowFullScreen alt async autoComplete
-autoFocus autoPlay capture cellPadding cellSpacing challenge charSet checked
-cite classID className colSpan cols content contentEditable contextMenu controls
-controlsList coords crossOrigin data dateTime default defer dir disabled
-download draggable encType form formAction formEncType formMethod formNoValidate
-formTarget frameBorder headers height hidden high href hrefLang htmlFor
-httpEquiv icon id inputMode integrity is keyParams keyType kind label lang list
-loop low manifest marginHeight marginWidth max maxLength media mediaGroup method
-min minLength multiple muted name noValidate nonce open optimum pattern
-placeholder poster preload profile radioGroup readOnly rel required reversed
-role rowSpan rows sandbox scope scoped scrolling seamless selected shape size
-sizes span spellCheck src srcDoc srcLang srcSet start step style summary
-tabIndex target title type useMap value width wmode wrap
+    return <>
+        <h3>Location</h3>
+        <p>Lat {props.geo.lat}</p>
+        <p>Lng {props.geo.lat}</p>
+    </>
+}
+export const Company = props => {
+    return <>
+        <h3>Company</h3>
+        <p>Name {props.company.name}</p>
+    </>
+}
 
-"https://reactjs.org/docs/dom-elements.html"
+export const UserInfo = props => {
 
-adding Events Handlers
+    return <>
+        <h2>Id {props.user.id}</h2>
+        <p>Name {props.user.name}</p>
+        <p>User Name {props.user.username}</p>
+        <p>Email {props.user.email}</p>
+        <p>Phone {props.user.phone}</p>
+        <p>Url {props.user.website}</p>
+    </>
+}
+//Prop driling
+export const User = props => {
+    return <>
+        <UserInfo user={props.user} />
+        <Address address={props.user.address} />
+        <Location geo={props.user.address.geo} />
+        <Company company={props.user.company} />
+    </>
+}
+//Add default Props
 
- <button onClick={method}></button>
+const App = () => {
+    return <div>
+        <User user={USER} />
+    </div>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+rootElement.render(<App />)
+..............................................................................................
+			Property Validation or Property Constraints
+.............................................................................................
+
+Javascript is dynamic typed language, meaning that the type of variable is not verified during compile time.
+
+dyamic typed/weak typing
+
+var a=1;
+console.log(a) => 1 => type is number
+
+you can reinitalize the with different types
+a="hello"
+console.log(a) => "hello" => type is string
+
+In c: - Strongly typed  /static typed
+int a=10
+a="hello" -compile time error 
+
+Type script : Strongly static typed javascript
+
+let a:number =10;
+a="hello"
+
+
+Inside compoent if pass data , can i enforce the react that accept only the type what i want.
+
+Yes , we can do with help of property validator.
+Property validator gives only warning , it wont stop rendering incase there is any type error.
+
+
+in order to write property rule, react provides a separate lib "prop-types"
+
+npm install --save prop-types
+
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import PropTypes from 'prop-types'
+
+const User = ({ id, name, status, address: { city } }) => {
+    return <>
+        <h1>Id {id}</h1>
+        <h1>Name {name}</h1>
+        <h1>Status {status ? "Available" : "Not Available"}</h1>
+        <h1>City {city}</h1>
+    </>
+}
+
+//setting default properties
+User.defaultProps = {
+    id: 0,
+    name: 'Your Name',
+    status: false,
+    address: {
+        city: 'Your city '
+    }
+}
+//setting property validation rules 
+User.propTypes = {
+    id: PropTypes.number
+}
+
+
+const App = () => {
+    let status = false
+    let address = {
+        city: 'Coimbatore'
+    }
+    return <>
+        <User />
+        <User id={"1"} name="Subramanian" status={true} />
+
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+After running:
+react-jsx-dev-runtime.development.js:87 Warning: Failed prop type: Invalid prop `id` of type `string` supplied to `User`, expected `number`.
+    at User (http://localhost:3000/static/js/bundle.js:29:5)
+    at App
+....................................................................................
+			 class Components, props,and it features
+
+Now a days class components are moved away from the react  ecyo system- only functions
+import React from "react";
+import ReactDOM from "react-dom/client";
+import PropTypes from 'prop-types'
+
+const User_ = ({ id, name, status, address: { city } }) => {
+    return <>
+        <h1>Id {id}</h1>
+        <h1>Name {name}</h1>
+        <h1>Status {status ? "Available" : "Not Available"}</h1>
+        <h1>City {city}</h1>
+    </>
+}
+
+//class components and props 
+
+class User extends React.Component {
+    render() {
+        //in class component props are available via this.props variable
+        //props is base class variable
+        const { id, name, status, address: { city } } = this.props
+        return <>
+            <h1>Id {id}</h1>
+            <h1>Name {name}</h1>
+            <h1>Status {status ? "Available" : "Not Available"}</h1>
+            <h1>City {city}</h1>
+        </>
+    }
+}
+//setting default properties
+User.defaultProps = {
+    id: 0,
+    name: 'Your Name',
+    status: false,
+    address: {
+        city: 'Your city '
+    }
+}
+//setting property validation rules 
+User.propTypes = {
+    id: PropTypes.number
+}
+
+const App = () => {
+    let status = false
+    let address = {
+        city: 'Coimbatore'
+    }
+    return <>
+        <User />
+        {/* <User id={"1"} name="Subramanian" status={true} /> */}
+        <User id={1} name="Subramanian" status={true} />
+
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+.....................................................................................
+			   comments
+
+js comments
+//
+jsx comments
+{/* <User id={"1"} name="Subramanian" status={true} /> */}
+
+....................................................................................
+How to break the big UI into smaller and smaller Component and how to share data 
+			   Uni Directional Data flow model
+
+
+eg:
+ Comment <------------------------------> CommentData
+   -UserInfo 
+	|
+	<Logo/Avatar>
+        User Name
+        <Comment-Test>
+        <Comment-Data>
+
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+function formateDate(date) {
+    return date.toLocaleDateString()
+
+}
+
+//without breaking 
+const Comment = props => {
+    return <div className="comment">
+        <div className="userinfo">
+            {/* Segment -1 */}
+            <div className="avatar">
+                <img src={props.author.avatarUrl} alt="Author Name" />
+            </div>
+            {/* Segment 2 */}
+            <div className="username">
+                <p>{props.author.name}</p>
+            </div>
+            {/* Segment 3 */}
+            <div className="commenttext">
+                <p>{props.text}</p>
+            </div>
+            {/* Segment 4 */}
+            <div className="commentdate">
+                {formateDate(props.date)}
+            </div>
+        </div>
+    </div>
+}
+
+const App = () => {
+    //pass data to the comments:this data may come from api later 
+    const comment = {
+        date: new Date(),
+        text: 'React is awesome lib',
+        author: {
+            name: 'Subramanian',
+            avatarUrl: 'http://placekitten.com/g/64/64'
+        }
+    }
+
+    return <>
+        <Comment date={comment.date} text={comment.text} author={comment.author} />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+...................................................................................
+
+How to extract Components?
+Avatar
+UserInfo
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+function formateDate(date) {
+    return date.toLocaleDateString()
+
+}
+export const Avatar = props => {
+    return <div className="avatar">
+        <img src={props.avatarUrl} alt="Author Name" />
+    </div>
+}
+export const User = props => {
+    return <div>
+        <p>{props.name}</p>
+    </div>
+}
+
+export const UserInfo = props => {
+    return <div className="userinfo">
+        <Avatar avatarUrl={props.author.avatarUrl} />
+        <User name={props.author.name} />
+    </div>
+}
+export const CommentDetails = props => {
+    return <div>
+        <div className="commenttext">
+            <p>{props.text}</p>
+        </div>
+        <div className="commentdate">
+            {formateDate(props.date)}
+        </div>
+    </div>
+}
+//with breaking 
+export const Comment = props => {
+    return <div className="comment">
+        <div className="userinfo">
+            <UserInfo author={props.author} />
+        </div>
+        <div>
+            <CommentDetails text={props.text} date={props.date} />
+        </div>
+    </div>
+}
+
+
+export const App = () => {
+    //pass data to the comments:this data may come from api later 
+    const comment = {
+        date: new Date(),
+        text: 'React is awesome lib',
+        author: {
+            name: 'Subramanian',
+            avatarUrl: 'http://placekitten.com/g/64/64'
+        }
+    }
+
+    return <>
+        <Comment date={comment.date} text={comment.text} author={comment.author} />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+....................................................................................
+			 List Rendering
+...................................................................................
+
+Arrays are primary datastructure to hold list of items.
+
+List Rendering we can prepare many ui layouts
+
+1.List View
+  Ul li
+2.Card Layout view
+  div
+3.Grid layout
+  table tr
+import ReactDOM from "react-dom/client";
+import { PHOTOS } from './mock-data/photos'
+import  "./index.css"
+/**
+ * Array Iteration apis
+ *  =>for..each
+ *  =>map
+ *  =>filter 
+ *  =>reduce 
+ *we use always map
+ */
+//List binding
+
+const List = props => {
+    const { numList } = props
+    return <>
+        <h1>List Rendering</h1>
+        <ul>
+            {
+                // numList.map(item => {
+                //     console.log(item)
+                //     return <li>{item}</li>
+                // })
+                numList.map(item => <li key={item}>{item}</li>)
+            }
+        </ul>
+    </>
+}
+
+const Photo = props => {
+
+    const { photos } = props
+    return <div>
+        <div>
+            {
+                photos.map(photo => {
+                    return <div key={photo.id}>
+                        <h2>id  {photo.id}</h2>
+                        <h3>{photo.title}</h3>
+                        <img src={photo.thumbnailUrl} alt="Your Pic" />
+                    </div>
+                })
+            }
+        </div>
+    </div>
+}
+
+
+
+const App = () => {
+    const numList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    return <div>
+        <List numList={numList} />
+        <Photo photos={PHOTOS} />
+    </div>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
 
 
 
