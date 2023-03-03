@@ -1870,6 +1870,706 @@ const App = () => {
 const rootElement = ReactDOM.createRoot(document.getElementById('root'))
 
 rootElement.render(<App />)
+...................................................................................
+			 Props and state -Dynamic props- state as prop
+....................................................................................
+
+import ReactDOM from "react-dom/client";
+import React from "react";
+
+//state and listener as prop
+
+class Counter extends React.Component {
+
+    //data
+    state = {
+        counter: 0
+    }
+    //biz logic
+    onIncrement = () => {
+        this.setState(previousState => {
+            console.log('Previous State /Old State =>', previousState)
+            return { ...previousState, counter: previousState.counter + 1 }
+        })
+    }
+
+    render() {
+        //user interface
+        return <div>
+            {/* Counter and onIncrement as prop  */}
+            <CounterDisplay counter={this.state.counter} onIncrement={this.onIncrement} />
+        </div>
+    }
+}
+
+//Presentational Component : The component which has only ui not state and biz logic 
+const CounterDisplay = props => {
+
+    return <>
+        <h1>Counter App -State </h1>
+        <h2>Counter {props.counter} </h2>
+        <button onClick={props.onIncrement}>+</button>
+    </>
+}
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+....................................................................................
+				Multi State
+...................................................................................
+import ReactDOM from "react-dom/client";
+import React from "react";
+
+
+class Counter extends React.Component {
+
+    //data
+    state = {
+        incValue: 0,
+        decValue: 100
+    }
+    //biz logic
+    onIncrement = () => {
+        this.setState(previousState => {
+            console.log('Previous State /Old State =>', previousState)
+            return { ...previousState, incValue: previousState.incValue + 1 }
+        })
+    }
+    onDecrement = () => {
+        this.setState(previousState => {
+            console.log('Previous State /Old State =>', previousState)
+            return { ...previousState, decValue: previousState.decValue - 1 }
+        })
+    }
+
+    render() {
+        //user interface
+        console.log('current State =>', this.state)
+        return <div>
+            {/* Counter and onIncrement as prop  */}
+            {/* <CounterDisplay decValue={this.state.decValue} incValue={this.state.incValue} onIncrement={this.onIncrement} onDecrement={this.onDecrement} /> */}
+            {/* Rest/Spread operator to merge proproperties */}
+            {/* {...this.state} means we pass all state variable prop */}
+            <CounterDisplay {...this.state} onIncrement={this.onIncrement} onDecrement={this.onDecrement} />
+        </div>
+    }
+}
+
+const CounterDisplay = ({ incValue, decValue, onIncrement,onDecrement }) => <>
+    <h1>Counter App -State </h1>
+    <h2>Counter Increment {incValue} | Decrement {decValue} </h2>
+    <button onClick={onIncrement}>+</button>
+    <button onClick={onDecrement}>-</button>
+
+</>
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+.....................................................................................
+				Arrays and Immutablity
+....................................................................................
+
+
+//impure function
+//array push method modifies existing array memory address
+//push is mutable api : dont use
+// function addTodo(todos, todo) {
+//     return todos.push(todo)
+// }
+// //pure function
+// function addTodo(todos, todo) {
+//     return todos.concat(todo)
+// }
+//spread operator
+//pure function
+function addTodo(todos, todo) {
+    return [...todos,todo]
+}
+
+let todos = [{
+    title: 'Learn react',
+    done: true
+}];
+let addedTodos = addTodo(todos, { title: 'Learn Pure functions', done: false })
+console.log(todos === addedTodos ? "Same" : "Different")
+
+Array Pure functions api
+
+1.concat - add
+2.map - iterations
+3.filter - iterations with filtering
+4.reduce - 
+
+import ReactDOM from "react-dom/client";
+import React from "react";
+
+
+class Todo extends React.Component {
+
+    //data
+    state = {
+        todos: [{ id: 0, title: 'learn react', completed: false }]
+    }
+    onAdd = () => {
+        this.setState(previousState => {
+            console.log('state', previousState)
+            //mutate array
+            let newTodo = {
+                id: Math.random(),
+                title: 'learn new Things',
+                completed: false
+            }
+           // return { ...previousState, todos: previousState.todos.concat(newTodo) }
+           return { ...previousState, todos:[...previousState.todos,newTodo] }
+        })
+    }
+    render() {
+        const { todos } = this.state
+        return <div>
+            {
+                todos.map(todo => {
+                    return <div key={todo.id}>
+                        <p>id : {todo.id}</p>
+                        <p>title: {todo.title}</p>
+                        <p>Status: {todo.completed ? 'done' : 'Not Done'}</p>
+                    </div>
+                })
+            }
+            <h1>Add New Todo</h1>
+            <button onClick={this.onAdd}>+</button>
+        </div>
+    }
+}
+
+
+
+const App = () => {
+    return <div style={{ margin: 50 }}>
+        <Todo />
+    </div>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+....................................................................................
+			How to remove class for state mutations
+			    How to introduce functions
+....................................................................................
+Hooks:
+ 
+What is a hook?
+ It is a function that let you use state and other react features without writing class
+ Hook abstract lot of complexity with respect class components.
+ Hook gives a clear path to write statefull components using functions itself
+
+Class components vs function components(hook)
+
+=>if you write some logic inside class, the same logic i want to reuse in other component which is not possible, you have duplicate the code
+=>hooks aka functional components are going to separate out common logic and we can reuse across the application.
+
+import ReactDOM from "react-dom/client";
+import React, { useState } from "react";
+
+
+class Counter__ extends React.Component {
+
+    state = {
+        counter: 0 // initial state
+    }
+    onIncrement = () => {
+        this.setState(previousState => {
+            console.log('Previous State /Old State =>', previousState)
+            return { ...previousState, counter: previousState.counter + 1 }
+        })
+    }
+
+    render() {
+        console.log('Current State => ', this.state)
+        return <div>
+            <h1>Counter App -State </h1>
+            <h2>Counter {this.state.counter} </h2>
+            <button onClick={this.onIncrement}>+</button>
+        </div>
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////
+//Functional Component with state
+/**
+ * 
+ * The class component state must be object  state = {}
+ * The functional component using hooks state can be even primitive, even though if you write primitive behind the scene it will be object only
+ * in hooks we never use setState method instead we can use our own setState eq pure funcitons
+ *  
+ */
+const Counter = props => {
+    //state declaration
+    const [counter, setCounter] = useState(0)
+
+    //listener 
+    // const onIncrement = () => {
+    //     // setCounter(previousCounter => {
+    //     //     console.log('Previous State /Old State =>', previousCounter)
+    //     //     return previousCounter + 1
+    //     // })
+    //     setCounter(counter + 1)
+    // }
+
+    console.log('Current State =>', counter)
+    // return <CounterDisplay counter={counter} setCounter={setCounter} />
+    return <CounterDisplay counter={counter} onIncrement={setCounter} />
+
+
+}
+
+const CounterDisplay = ({ counter, onIncrement }) => {
+    return <>
+        <h1>Counter App -Using Hooks </h1>
+        <h2>Counter {counter}</h2>
+        {/* <button onClick={onIncrement}>+</button> */}
+        {/* Inline Listener */}
+        <button onClick={() => {
+            onIncrement(counter + 1)
+        }}>+</button>
+    </>
+}
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+....................................................................................
+				Multi state with hooks
+import ReactDOM from "react-dom/client";
+import { useState } from "react";
+
+const Counter = props => {
+    //state declaration
+    const [incValue, setIncValue] = useState(0)
+    const [decValue, setDecValue] = useState(100)
+
+    return <CounterDisplay incValue={incValue} decValue={decValue} onDecrement={setDecValue} onIncrement={setIncValue} />
+}
+
+const CounterDisplay = ({ incValue, decValue, onIncrement, onDecrement }) => {
+    return <>
+        <h2>Incrementer {incValue} | Decrementer {decValue}</h2>
+        <button onClick={() => {
+            onIncrement(incValue + 1)
+        }}>+</button>
+        <button onClick={() => {
+            onDecrement(decValue - 1)
+        }}>-</button>
+    </>
+}
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+....................................................................................
+			 Object as State inside hook
+
+import ReactDOM from "react-dom/client";
+import { useState } from "react";
+
+const Counter = props => {
+    const [counter, setCounter] = useState({ incValue: 0, decValue: 100 })
+
+    const onIncrement = () => {
+        // setCounter(prevCounter => {
+        //     return { ...prevCounter, incValue: prevCounter.incValue + 1 }
+        // })
+        // setCounter(prevCounter => ({ ...prevCounter, incValue: prevCounter.incValue + 1 }))
+        setCounter(({ ...counter, incValue: counter.incValue + 1 }))
+    }
+
+    return <>
+        <h1>Counter Hooks Using Object</h1>
+        <h2>Counter Incrementer {counter.incValue} | Decrementer {counter.decValue}</h2>
+        <button onClick={onIncrement}>+</button>
+        <button onClick={() => {
+            setCounter(prevCounter => {
+                return { ...prevCounter, decValue: prevCounter.decValue - 1 }
+            })
+        }}>-</button>
+
+    </>
+}
+
+const App = () => {
+    return <>
+        <Counter />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+.....................................................................................
+			  Component Life Cycles 
+.....................................................................................
+
+Component Life has three stages
+
+1.Mount stage
+  When a component is initalized and mounted into target(browser/native)
+2.Update Stage
+  When user interacts
+3.UnMount Stage
+  When compoent is removed from the tree.
+
+1.Mount stage
+  
+ render : 
+   It is called for preparing virtual Object tree
+  inside render we write jsx code
+ componentDidMount
+   It is called once the virtual Object tree becomes real nodes inside browser or native.
+  it is usefull for lazy logics like inital ajax calls,websockets,timers...
+
+
+demo with class compoents
+
+
+import ReactDOM from "react-dom/client";
+import React from 'react'
+
+//parent compoent
+class Parent extends React.Component {
+    constructor() {
+        super()
+        console.log('parent constructor is called')
+    }
+    render() {
+        console.log('parent render is called')
+        return <>
+            <h1>Parent Compoent</h1>
+            <Child/>
+        </>
+    }
+    componentDidMount(){
+        console.log('parent componentDidMount is called')
+    }
+}
+
+class Child extends React.Component {
+    constructor() {
+        super()
+        console.log('Child constructor is called')
+    }
+    render() {
+        console.log('Child render is called')
+        return <>
+            <h1>Child Compoent</h1>
+        </>
+    }
+    componentDidMount(){
+        console.log('Child componentDidMount is called')
+    }
+}
+
+const App = () => {
+    return <>
+        <Parent />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+......................................................................................
+import ReactDOM from "react-dom/client";
+import React, { useEffect } from 'react'
+
+//parent compoent
+const Parent = () => {
+    //Component did Mount
+    useEffect(() => {
+        console.log('parent componentDidMount is called')
+    }, [])
+    console.log('Parent render is called')
+    return <>
+        <h1>Parent Compoent</h1>
+        <Child />
+    </>
+}
+
+//child compoenent
+const Child = () => {
+    //Component did Mount
+    useEffect(() => {
+        console.log('Child componentDidMount is called')
+    }, [])
+    console.log('Child render is called')
+    return <>
+        <h1>Child Compoent</h1>
+    </>
+}
+
+const App = () => {
+    return <>
+        <Parent />
+    </>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+........................................................................................................................................................................
+			  Component Life cycles and Hooks
+....................................................................................
+comonentDidMount:
+ Used for doing some resource intensive tasks, such as setting up ajax calls for inital page.
+ It is called after inital render
+
+compoentDidUpdate:
+  called after every update finishes.
+
+How to write these two life cycle methods inside functional components.
+//hooks : componentDidMount - useEffect
+import React, { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
+
+
+const Todos = props => {
+    //state
+    const [state, setState] = useState({
+        error: null,
+        isLoaded: false, //spiner status
+        todos: [] // data
+    })
+
+    //componentDidMount
+    useEffect(() => {
+        fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(response => response.json())
+            .then(todos => {
+                setTimeout(() => {
+                    setState(prevState => ({ ...prevState, todos: prevState.todos.concat(todos), isLoaded: true }))
+                }, 5000)
+            })
+            .catch(err => {
+                setState(prevState => ({ ...prevState, isLoaded: true, error: err }))
+            });
+    }, [])
+
+    //render code
+
+    const { error, isLoaded, todos } = state;
+    if (error) {
+        return <Error error={error} />
+    } else if (!isLoaded) {
+        return <Spinner />
+    } else {
+        return <div>
+            <h1>Todo App</h1>
+            <ul>
+                {state.todos.map(todo => {
+                    return <li key={todo.id}>{todo.title}</li>
+                })}
+            </ul>
+        </div>
+    }
+
+
+
+}
+
+const Error = props => {
+    return <>
+        <h2>{props.error}</h2>
+    </>
+}
+const Spinner = props => {
+    return <>
+        <h2 style={{ backgroundColor: 'yellow' }}>Loading...</h2>
+    </>
+}
+
+
+const App = props => <div>
+    <h1>Ajax calls inside FuncitionalComponent</h1>
+    <Todos />
+</div>
+
+ReactDOM.render(<App />, document.getElementById('root'))
+
+
+With async await:
+................
+import ReactDOM from "react-dom/client";
+import React, { useEffect, useState } from 'react'
+
+const POSTAPI = () => {
+    const url = 'https://jsonplaceholder.typicode.com/posts'
+    return fetch(url);
+}
+
+
+//parent compoent
+const Posts = () => {
+    //state
+    const [state, setState] = useState({
+        error: null,  // to show error 
+        isLoaded: false, //spiner status
+        posts: [] // data
+    })
+
+    async function fetchData() {
+        // You can await here
+        try {
+            // const response = await POSTAPI();
+            // const posts = await response.json()
+            const posts = await (await POSTAPI()).json()
+            setState(prevState => ({ ...prevState, posts: prevState.posts.concat(posts), isLoaded: true }))
+        }
+        catch (err) {
+            setState(prevState => ({ ...prevState, isLoaded: true, error: err }))
+        }
+
+    }
+    //componentDidMount
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+
+
+    {/* Here we need to display three different things: Error,loader,data */ }
+    {/* Conditional Rendering */ }
+    const { error, isLoaded, posts } = state
+    if (error) {
+        return <>Error</>
+    } else if (!isLoaded) {
+        return <>Loading....</>
+    } else {
+        return <div>
+            <h1>Posts App</h1>
+            <ul>
+                {posts.map(post => {
+                    return <li key={post.id}>{post.title}</li>
+                })}
+            </ul>
+        </div>
+    }
+
+}
+
+
+const App = () => {
+    return <div style={{ marginTop: 50, marginLeft: 150, color: 'blueviolet', fontStyle: 'oblique' }}>
+        <Posts />
+    </div>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+.....................................................................................
+import ReactDOM from "react-dom/client";
+import React, { useEffect, useState } from 'react'
+
+const PHOTOSAPI = () => {
+    const url = 'https://jsonplaceholder.typicode.com/photos'
+    return fetch(url);
+}
+
+
+//parent compoent
+const Photos = () => {
+    //state
+    const [state, setState] = useState({
+        error: null,  // to show error 
+        isLoaded: false, //spiner status
+        photos: [] // data
+    })
+
+    async function fetchData() {
+        // You can await here
+        try {
+            const photos = await (await PHOTOSAPI()).json()
+            setState(prevState => ({ ...prevState, photos: prevState.photos.concat(photos), isLoaded: true }))
+        }
+        catch (err) {
+            setState(prevState => ({ ...prevState, isLoaded: true, error: err }))
+        }
+
+    }
+    //componentDidMount
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+
+
+    {/* Here we need to display three different things: Error,loader,data */ }
+    {/* Conditional Rendering */ }
+    const { error, isLoaded, photos } = state
+    if (error) {
+        return <>Error</>
+    } else if (!isLoaded) {
+        return <>Loading....</>
+    } else {
+        return <div>
+            <h1>Photo App</h1>
+            <div>
+                {photos.map(photo => {
+                    return <div>
+                        <h1>{photo.title}</h1>
+                        <img src={photo.thumbnailUrl} alt="Your pic" />
+                    </div>
+                })}
+            </div>
+        </div>
+    }
+
+}
+
+
+const App = () => {
+    return <div style={{ marginTop: 50, marginLeft: 150, color: 'blueviolet', fontStyle: 'oblique' }}>
+        <Photos />
+    </div>
+}
+
+const rootElement = ReactDOM.createRoot(document.getElementById('root'))
+
+rootElement.render(<App />)
+
+
+
+
+
+
+
+
 
 
 

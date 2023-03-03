@@ -1,26 +1,28 @@
 import ReactDOM from "react-dom/client";
 import React, { useEffect, useState } from 'react'
 
-const PHOTOSAPI = () => {
-    const url = 'https://jsonplaceholder.typicode.com/photos'
+const POSTAPI = () => {
+    const url = 'https://jsonplaceholder.typicode.com/posts'
     return fetch(url);
 }
 
 
 //parent compoent
-const Photos = () => {
+const Posts = () => {
     //state
     const [state, setState] = useState({
         error: null,  // to show error 
         isLoaded: false, //spiner status
-        photos: [] // data
+        posts: [] // data
     })
 
     async function fetchData() {
         // You can await here
         try {
-            const photos = await (await PHOTOSAPI()).json()
-            setState(prevState => ({ ...prevState, photos: prevState.photos.concat(photos), isLoaded: true }))
+            // const response = await POSTAPI();
+            // const posts = await response.json()
+            const posts = await (await POSTAPI()).json()
+            setState(prevState => ({ ...prevState, posts: prevState.posts.concat(posts), isLoaded: true }))
         }
         catch (err) {
             setState(prevState => ({ ...prevState, isLoaded: true, error: err }))
@@ -36,22 +38,19 @@ const Photos = () => {
 
     {/* Here we need to display three different things: Error,loader,data */ }
     {/* Conditional Rendering */ }
-    const { error, isLoaded, photos } = state
+    const { error, isLoaded, posts } = state
     if (error) {
         return <>Error</>
     } else if (!isLoaded) {
         return <>Loading....</>
     } else {
         return <div>
-            <h1>Photo App</h1>
-            <div>
-                {photos.map(photo => {
-                    return <div>
-                        <h1>{photo.title}</h1>
-                        <img src={photo.thumbnailUrl} alt="Your pic" />
-                    </div>
+            <h1>Posts App</h1>
+            <ul>
+                {posts.map(post => {
+                    return <li key={post.id}>{post.title}</li>
                 })}
-            </div>
+            </ul>
         </div>
     }
 
@@ -60,7 +59,7 @@ const Photos = () => {
 
 const App = () => {
     return <div style={{ marginTop: 50, marginLeft: 150, color: 'blueviolet', fontStyle: 'oblique' }}>
-        <Photos />
+        <Posts />
     </div>
 }
 
