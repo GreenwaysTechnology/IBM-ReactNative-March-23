@@ -1,4 +1,4 @@
-                                             React Native
+                                           React Native
 ..............................................................................................
 
 What is React Native?
@@ -49,7 +49,8 @@ Types of mobile Apps:
 2.Web apps
    Apps built for browsers -Mobile browsers
 3.Hybrid  apps
-   built apps using javascript but it wont run inside browser, runs inside mobile using   container(WebView).
+   built apps using javascript but it wont run inside browser, runs inside mobile using
+  container(WebView).
 
 
 Hybrid apps:
@@ -70,33 +71,30 @@ Js is simple dom language, how to acess platform services such as contacts,netwo
 
 ...........................................................................................
 
-How to build mobile native apps in portable way using same javascript technology without html and css?
+How to build mobile native apps in portable way using same javascript technology without html
+and css?
 
-		That is birth of React Native.
+That is birth of React Native.
 
-/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-React Native Application Architecture :
+React Native Architecture :
 ...........................
 
 React native applications are written using react(js) core principles
- -Components
+ -Component
  -Props
  -State
  -Event Handling
- -JSX
 
-           "Every react native apps are simple javascript code"
+Every react native apps are simple javascript code.
 
- "In React Native, there is no webview concept. React native never run inside browser."
-...............................................................................
-			How react native works?
+In React Native, there is no webview concept. React native never run inside browser.
 
+Types of React Native code:
 
-if you want to understand react native, we need to understand the source code react native.
-
-we write code in react using jsx language.
-jsx language mixes of html code + javascript 
+React Native code consist of Two things:
+.......................................
 
 1.UI MARK UP Code
    -  incase of react , html is mark up
@@ -110,41 +108,13 @@ components only.Why?
 So we need generic concept for both  platforms. 
 For that React native provides a generic components for both platforms.
 
-.....................................................................................
-	   		 JSX Compilation Model
-			     (browser)
-
-                   layout.js / layout.jsx  -source code
-		       |
-		    compiler - babel.js 
-			|
-		    plain js code
-			|-----------------------Dev cycle
-	----------------------------------------- -- Excution cycles Starts
-  Runtime : React Engine  compiled code feed into react engine
-			|
-		  Excute compiled js code : function calls
-			|
-	     create virtual Object tree (in browser V-dom)
-		        |
-		    Render Engine ; will convert react object tree into js dom object tree
-			|
-		   Flush the tree into target
-			|
-	--------------------------------------------
-        |
-       v8
-     Browser			
-
-React Native Compilation:
+Compilation:
 
 What is it? What is happening during compilation?
 
 Source code is converted into another source code - Compilation.
-
 Another code is platform specific code. android code or ios code.
-
-if i  write ui components, ui components will be converted to platform spefic components.
+if i wirte ui components, ui components will be converted to platform spefic components.
 javascript code will be emitted as it is-app code.
 
 
@@ -159,49 +129,34 @@ javascript code will be emitted as it is-app code.
 2.Compiled code
     code converted into platform specific code.
 
-			React Native Source Code
-			  (fileName.js or jsx)
-				|
-			     compiler
-				|
-		---------------------------------------------
-		|                                           |
-	  ui mark up                                  javascript code
-		|
-  compiled as platform specific code			   |
-		|                                      Not Compiled
-	-------------					   |
-	|           |                                    
-  Andorid          ios
+////////////////////////////////////////////////////////////////////////////////////////////
 
--------------------------------------------------------------------------------------
+How react native apps are executed?  Execution Model:
+.....................................................
 
-Runtime Components:
+All views are executed by platform runtimes eg: android by art.
+All javascript is executed by JavaScriptCore Js engine.
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-1.All Views(User interface) elements are executed by "Platform runtimes"
-2.All javascript code is exectued by javascript runtime.
-
-Browsers:
- Chrome - V8
- Edge - Chakra
- FireFox -Spider Monkey
+How to build react native apps?
 
 
-Hermes is an open-source JavaScript engine optimized for React Native
-.....................................................................................
-			How to build react native apps
+React native apps can be built using two work flows.
 
 
-There are two work flows 
+1.Native Work flow
 
-1.Using React native lib
-2.Using Expo framework
+ If you are already familiar with mobile development, you may want to use React Native CLI.
+ It requires Xcode or Android Studio to get started. If you already have one of these tools installed, you should be able to get up and running within a few minutes. If they are not installed, you should expect to spend about an hour installing and configuring them.
+
+2.Expo Work Flow.
+  If you are new to mobile development, the easiest way to get started is with Expo CLI. Expo is a set of tools built around React Native and, while it has many features, the most relevant feature for us right now is that it can get you writing a React Native app within minutes
 
 
-1.Using React native lib
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-React Native lib is core lib which offers core components for building native application development
-
+Native work flow:
+ 
 if you want to build professional mobile app you need lot of infrastructure.
  UI Components
     -Views,Text,Labels,ListViews,ScrollView,TabView...........
@@ -210,20 +165,34 @@ React native core team provides all core components necessary to build mobile ap
 
 What if i want more components which is not supported by react core team.
 
-You need to look at community or companies who provides professional mobile apps.
+YOu need to look at community or companies who provides professional mobile apps.
 
 -Community -https://reactnative.directory/
 
 
-2.Using Expo framework
-
- Expo  is a framwork built on the top of ReactNative core lib
-
+Expo Work flow:
+...............
 What is expo?
 
- Expo is a framework and a platform for universal React native applications. It is a set of tools and services built around React Native and native platforms that help you develop, build, deploy, and quickly iterate on iOS, Android, and web apps from the same JavaScript/TypeScript codebase.
+ Expo is a framework and a platform for universal React applications. It is a set of tools and services built around React Native and native platforms that help you develop, build, deploy, and quickly iterate on iOS, Android, and web apps from the same JavaScript/TypeScript codebase.
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-Expo Apps are created using 2 ways
+Setup :
+
+Expo work flow Setup
+....................
+
+1.install expo-cli
+
+npm install -g expo-cli
+
+2.Create project
+
+expo init AwesomeProject
+cd AwesomeProject
+npm start # you can also use: expo start
+
+Expo apps can be created in two ways
 
 
 Managed Work flow:
@@ -246,8 +215,6 @@ Bare Work flow:
 
 In the bare workflow the developer has complete control, along with the complexity that comes with that. You can use most APIs in the Expo SDK, but the build service and easy Configuration with app.json / app.config.js are not yet supported.
 
-.....................................................................................
-
 Running your React Native application in case of expo work flow:
 .................................................................
 
@@ -259,427 +226,834 @@ Running your React Native application in case of expo work flow:
 
 Metro Bundler:
 -Online compiler, compiles code into react native 
-....................................................................................
-				Project setup
-
-1.Using Reactive lib work flow
-
-Requirements
-
--Windows - os
--Android 
-
-Dependencies:
-1.Node - 14+
-2.JDK - 11
-
-Open Cmd Prompt:
-
-java --version
-java 11.0.11 2021-04-20 LTS
-Java(TM) SE Runtime Environment 18.9 (build 11.0.11+9-LTS-194)
-Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.11+9-LTS-194, mixed mode)
-
-node --version
-v16.15.0
+////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Kindly follow the Official documentation for installing necessary setups
+Create Native Project: Using native work flow:
+..............................................
 
-1.Android studio
-2.SDK
-3.AVD Managers
-https://reactnative.dev/docs/environment-setup
+Steps:
+......
 
-.....................................................................................
+1.npm install react-native-cli -g
 
-React Native Project setup.
+2.Create Project
+ react-native init AwesomeNativeProject
 
-npx react-native init ProjectName
+3.Running Project
+ Run instructions for Android:
+    • Have an Android emulator running (quickest way to get started), or a device connected.
+    • cd "C:\session\ibm\2021\march\reactnative\AwesomeNativeProject" && npx react-native run-android
+
+Android Builder:
+info Running jetifier to migrate libraries to AndroidX. You can disable it using "--no-jetifier" flag.
+Jetifier found 903 file(s) to forward-jetify. Using 12 workers...
+info Starting JS server...
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+info Launching emulator...
+info Successfully launched emulator.
+info Installing the app...
+Downloading https://services.gradle.org/distributions/gradle-6.7-all.zip
+.............10%..............20%..............30%..............40%..............50%..............60%..............70%..............80%..............90%..............100%
+
+Welcome to Gradle 6.7!
+
+Here are the highlights of this release:
+ - File system watching is ready for production use
+ - Declare the version of Java your build requires
+ - Java 15 support
+
+For more details see https://docs.gradle.org/6.7/release-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+File C:\Users\sasub\.android\repositories.cfg could not be loaded.
+Checking the license for package Android SDK Build-Tools 29.0.2 in C:\Users\sasub\AppData\Local\Android\Sdk\licenses
+License for package Android SDK Build-Tools 29.0.2 accepted.
+Preparing "Install Android SDK Build-Tools 29.0.2 (revision: 29.0.2)".
+"Install Android SDK Build-Tools 29.0.2 (revision: 29.0.2)" ready.
+Installing Android SDK Build-Tools 29.0.2 in C:\Users\sasub\AppData\Local\Android\Sdk\build-tools\29.0.2
+"Install Android SDK Build-Tools 29.0.2 (revision: 29.0.2)" complete.
+"Install Android SDK Build-Tools 29.0.2 (revision: 29.0.2)" finished.
+
+> Task :app:compileDebugJavaWithJavac
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libc++_shared.so, libevent-2.1.so, libevent_core-2.1.so, libevent_extra-2.1.so, libfb.so, libfbjni.so, libflipper.so, libfolly_futures.so, libfolly_json.so, libglog.so, libglog_init.so, libhermes-executor-common-debug.so, libhermes-executor-common-release.so, libhermes-executor-debug.so, libhermes-executor-release.so, libhermes-inspector.so, libimagepipeline.so, libjsc.so, libjscexecutor.so, libjsijniprofiler.so, libjsinspector.so, libnative-filters.so, libnative-imagetranscoder.so, libreact_codegen_reactandroidspec.so, libreact_nativemodule_core.so, libreactnativeblob.so, libreactnativejni.so, libreactnativeutilsjni.so, libreactperfloggerjni.so, libturbomodulejsijni.so, libyoga.so.
+
+> Task :app:installDebug
+Installing APK 'app-debug.apk' on 'Nexus_6_API_29(AVD) - 10' for app:debug
+Installed on 1 device.
+
+BUILD SUCCESSFUL in 5m 10s
+29 actionable tasks: 29 executed
+info Connecting to the development server...
+8081
+info Starting the app on "emulator-5554"...
+Starting: Intent { cmp=com.awesomenativeproject/.MainActivity }
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Entry point For react native application? How to mount react native apps?
+
+import {AppRegistry} from 'react-native';
+import App from './App';
+import {name as appName} from './app.json';
+
+AppRegistry.registerComponent(appName, () => App);
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+React Native Application Architecture:
+......................................
+
+React Native apps are collection of components(From react native core,third party components,expo components).
+
+Basic template :
+
+import React from 'react'
+
+Components:
+...........
+
+1.Text --- <p>
+
+import React from 'react';
+import {Text} from 'react-native';
 
 
-Note:
- Before running npx command, if you have installed react-native cli via npm 
-for eg:
-npm install react-native-cli -g
-You have to uninstall other wise it will give some error.
-
-npm uninstall react-native-cli -g
-
-
-npx react-native@latest init AwesomeProject
-
-How to run app?
-cd "E:\session\IBM\2022\july\ReactNative\myreactnativeApp" && npx react-native run-android
-.....................................................................................
-			   Expo Work flow Setup
-....................................................................................
-
-
-Expo work flow:
-..............
-
-Using npm
-
-npm install expo-cli --global
-expo init myNewProject
-cd myNewProject
-expo start
-
-Using npx
-
-npx create-expo-app expoapp && cd expoapp
-.....................................................................................
-				React Native Core Components
-.....................................................................................
-
-React Native offers lot of components but some components are core components.
-
-Basic components:
-..................
-
-1.View
-2.Text
-3.Image
-4.TextInput
-5.ScrollView
-6.StyleSheet
-
-1.View:
-.......
-  The most fundamental component for building a UI, View is a container that supports layout with flexbox, style, some touch handling, and accessibility controls. View maps directly to the native view equivalent on whatever platform React Native is running on, whether that is a UIView, <div>, android.view, etc.
-
-
-import { View } from "react-native";
-
-//Root Component
-function App() {
-   return <View>
-   </View>
+export default function App(){
+    return <Text>Hello!</Text>
 }
 
-export default App;
+2.View 
 
-2.Text
-	
-A React component for displaying text.
+ The most fundamental component for building a UI, View is a container that supports layout with flexbox, style, some touch handling, and accessibility controls. 
+View maps directly to the native view equivalent on whatever platform React Native is running on, whether that is a UIView, <div>, android.view, etc.
 
-Text supports nesting, styling, and touch handling.
+import React from 'react';
+import { Text, View } from 'react-native';
 
 
-
-import { Text, View } from "react-native";
-
-//Root Component
-function App() {
+export default function App() {
     return <View>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
+            <Text>Hello View!</Text>
     </View>
 }
 
-export default App;
-.....................................................................................					 JSX basic Rules
-....................................................................................
-
-JSX follows XML rules for markup design.
-
-1.In XML elements must organized under one parent element/root element, if not then it will throw error, same pattern is followed in react jsx as well.
-
-Error code
-<p>hai</p>
-<p>hai</p>
-  <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-
-<div>
-<p>hai</p>
-<p>hai</p>
-</div>
-<View>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-    </View>
-
-some times i dont want container elements.
-
-React 16 onwards, it is possible to have without container elements, with help of fragements
-
-Fragements are used to avoid unncessary view/div elements.
-Fragements are invisible container component.
-
-<React.Fragement>
-
-<React.Fragment>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-    </React.Fragment>
-
-Short cut:
-
-import React,{Fragment} from "react";
-import { Text, View } from "react-native";
-
-//Root Component
-function App() {
-    return <Fragment>
-        <Text>
-            Hello,React Native
-        </Text>
-        <Text>
-            Hello,React Native
-        </Text>
-    </Fragment>
-}
-
-export default App;
-
-
-import React, { Fragment } from "react";
-import { Text, View } from "react-native";
-
-//Root Component
-// function App() {
-//     return <View>
-//         <Text>
-//             Hello,React Native
-//         </Text>
-//         <Text>
-//             Hello,React Native
-//         </Text>
-//     </View>
-// }
-const App = () => <View>
-    <Text>
-        Hello,React Native!
-    </Text>
-    <Text>
-        Hello,React Native!!
-    </Text>
-</View>
-
-export default App;
-....................................................................................
-
-....................................................................................
-			      React Native Styles
-.....................................................................................
+Any thing will be rendered from left most corner, how to align.
 
 Styles:
+.......
 
-React Native applications are platform independant: if android means, android spefic styles
-should be applied, if ios means ios specific styles should be challenge.
-                                                     
-						     
- 						      |----Android
- Common Style language/lib/framework----|build tool---|----IOS
+In react Styles are added through css, react native does not css because no html is used.
+
+React Native does not allow css directly. Java script has api to add styles via code.
+
+eg.
+in html
+
+document.getElementById('myid').styles.add.backgroundColor='red'
+
+React Native uses javascript api to add styles to any UI Element.
+
+Style is Object, which contains properties
+
+ element.style.property
+
+StyleSheet
+   A StyleSheet is an abstraction similar to CSS StyleSheets
+
+StyleSheet object has method called "create" mehtod
 
 
-CSS is style language for web -browsers.
-
-Can we use CSS language for React Native?
-
-No!.
-
-React Native uses CSS INSIDE javascript:
-
-In React
-
-css
-.box{
-  background-color :'red'
+StyleSheet.create({
+ styleProperty: propvalue,
+ stylePropery:{
+    styleProp:propValue
  }
+});
 
-Way1
- <div className="box">
-
-way 2
-
-javascript style object
- <div style={ {backgroundColor:'red'} } />
-
-javascript style object properties:
-https://www.w3schools.com/jsref/dom_obj_style.asp
+Refer :https://www.w3schools.com/jsref/prop_style_color.asp
 
 
-React Native style representation:
+eg:
 
-1.StyleSheet  is object through we can create styles and can be attached to any React native elements.
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
 
-Style can be applied in twos
+export const { container, text } = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea"
+    },
+    text: {
+        color: "blue",
+        textAlign: "center",
+        fontSize: 30
+    }
+});
 
-1.inline style object
-<View>
+export default function App() {
+    return <View style={container}>
+        <Text style={text}>Hello View!</Text>
+        {/**in line style */}
+        <Text style={{
+            color: "red",
+            textAlign: "center",
+            fontSize: 30
+        }}>Hello View!</Text>
 
-</View>
+    </View>
+}
 
-2.external style object
-<View>
+// export default function App() {
+//     return <View style={appStyles.container}>
+//         <Text style={appStyles.text}>Hello View!</Text>
+//         {/**in line style */}
+//         <Text style={{
+//             color: "red",
+//             textAlign: "center",
+//             fontSize: 30
+//         }}>Hello View!</Text>
 
-</View>
-
-
-import { View, Text, StyleSheet } from "react-native"
-
-
-// const App = () => {
-//     // inline style 
-//     return <View style={{backgroundColor:'pink'}}>
-//         <Text>
-//             Welcome to React Native
-//         </Text>
 //     </View>
 // }
+// const appStyles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         padding: 24,
+//         backgroundColor: "#eaeaea"
+//     },
+//     text: {
+//         color: "#20232a",
+//         textAlign: "center",
+//         fontSize: 30
+//     }
+// });
 
-//external style object 
-const styles = StyleSheet.create({
-    backgroundColor: 'yellow'
-})
+//////////////////////////////////////////////////////////////////////////////////////////////
 
+Data binding : props
+
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+
+export const { container, text } = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea"
+    },
+    text: {
+        color: "blue",
+        textAlign: "center",
+        fontSize: 30
+    }
+});
+
+const Greeting = props => <>
+    <Text style={text}>{props.message}</Text>
+</>
 
 const App = () => {
-    // inline style 
-    return <View style={styles}>
-        <Text>
-            Welcome to React Native
-        </Text>
+    return <View style={container}>
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
     </View>
 }
 export default App;
-.....................................................................................
-		    Styling Indivdual Components
-....................................................................................
 
-Component is collection of userinterface elements like view,text...
+/////////////////////////////////////////////////////////////////////////////////////////////
+How to modularize the components?
 
-How to write style for View and Text separtely.
+components/greeting.jsx
+
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+
+export const { text } = StyleSheet.create({
+    text: {
+        color: "blue",
+        textAlign: "center",
+        fontSize: 30
+    }
+});
+
+export const Greeting = props => <>
+    <Text style={text}>{props.message}</Text>
+</>
+
+App.js
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Greeting } from './components/greeting';
+
+export const { container, text } = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea"
+    },
+});
+
+const App = () => {
+    return <View style={container}>
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
+        <Greeting message="Hello Props View" />
+    </View>
+}
+export default App;
+////////////////////////////////////////////////////////////////////////////////////////////
+Properties for Built in React Native Components
+...............................................
+
+export const Greeting = props => <>
+    <Text onPress={() => alert('pressed')} style={text}>{props.message}</Text>
+</>
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+State:
+
+1.class Component
+2.using functions with hooks
+
+
+Using Component:
+
+import React, { Component } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+export const { container, text } = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea",
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+export default class App extends Component {
+    state = {
+        counter: 1
+    };
+    //listener function
+    onIncrement = () => {
+        //alert('button is clicked')
+        this.setState((state) => {
+            return {
+                counter: state.counter + 1
+            }
+        })
+    }
+    render() {
+        return <View style={container}>
+            <Text style={text}>Counter {this.state.counter}</Text>
+            <Button title="Increment" onPress={this.onIncrement} />
+        </View>
+    }
+}
+
+Using Hooks:
+............
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+export const { container, text } = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24,
+        backgroundColor: "#eaeaea",
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+const App = () => {
+    const [counter, setCounter] = useState(1);
+    const onIncrement = () => {
+        setCounter(counter + 1);    }
+    return <View style={container}>
+        {/**state as prop */}
+        <CounterDisplay counter={counter} onIncrement={onIncrement} />
+    </View>
+}
+//presentational component
+export const CounterDisplay=({counter,onIncrement})=>{
+    return <>
+         <Text style={text}>Counter {counter}</Text>
+         <Button title="Increment" onPress={onIncrement} color="green"/>
+      </>
+}
+
+export default App;
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+How to use colors?
+
+ -color names; red blue; which is not mostly recommended.
+ -color values ; #
+
+Color apis:
+
+PlatformColor
+
+PlatformColor(color1, [color2, ...colorN]);
+
+ You can use the PlatformColor function to access native colors on the target platform by supplying the native color’s corresponding string value
+
+If you pass more than one string value to the PlatformColor function, it will treat the first value as the default and the rest as fallback.
+
+PlatformColor('bogusName', 'linkColor');
+
+Supported colors
+:
+For a full list of the types of system colors supported.
+
+Android:
+R.attr - ?attr prefix
+R.color - @android:color prefix
+iOS (Objective-C and Swift notations):
+UIColor Standard Colors
+UIColor UI Element Colors
+
+select method how works?
+ select internally applies if logic to select os
+
+Platform.OS === 'platform' or a Platform.select()
+
+
+
+import React from 'react';
+import {
+    Platform,
+    PlatformColor,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native';
+
+const App = () => (
+    <View style={styles.container}>
+        <Text style={styles.label}>
+            I am a special label color!
+    </Text>
+    </View>
+);
 
 const styles = StyleSheet.create({
-    container: { 
-	 backgroundColor: 'yellow'
+    label: {
+        padding: 16,
+        ...Platform.select({
+            ios: {
+                color: PlatformColor('label'),
+                backgroundColor:
+                    PlatformColor('systemTealColor'),
+            },
+            android: {
+                color: PlatformColor('?android:attr/textColor'),
+                backgroundColor:
+                    PlatformColor('@android:color/holo_blue_bright'),
+            },
+            default: { color: 'black' }
+        })
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...Platform.select({
+            ios: {
+                color: PlatformColor('label'),
+                backgroundColor:
+                    PlatformColor('systemTealColor'),
+            },
+            android: {
+                color: PlatformColor('?android:attr/textColor'),
+                backgroundColor:
+                    PlatformColor('@android:color/holo_orange_dark'),
+            },
+            default: { color: 'black' }
+        })
     }
-})
+});
 
-eg:
-import { View, Text, StyleSheet } from "react-native"
+export default App;
+///////////////////////////////////////////////////////////////////////////////////////////
 
+How to get Input from the User?
 
-// const App = () => {
-//     // inline style 
-//     return <View style={{backgroundColor:'pink'}}>
-//         <Text>
-//             Welcome to React Native
-//         </Text>
-//     </View>
-// }
+TextInput:
+import { View, StyleSheet, Text, Button, TextInput, Alert } from 'react-native';
+import React, { useState } from 'react';
 
-//external style object 
-// const styles = StyleSheet.create({
-//     backgroundColor: 'yellow'
-// })
+const GetInput = () => {
+    const [text,setText]= useState('ram');
+  
+    const update = name => {
+        setText(name)
+    }
+    const getName = ()=>{
+        Alert.alert(text);
+    }
+    return <>
+        <Text>Enter Name</Text>
+        <TextInput style={styles.input} value={text} onChangeText={update} />
+        <Button title="Enter Name" onPress={getName} color="green"/>
+    </>
+}
+
+const App = () => <View style={styles.container}>
+    <GetInput />
+</View>
+
+export default App;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'yellow'
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    text: {
-        fontSize: 100,
-        color: "red",
+    label: {
+        fontSize: 25,
+        color: 'red'
+    },
+    input: {
+        width: '100%',
+        borderColor: 'black',
+        borderWidth: 1,
+        padding: 10,
+        marginBottom: 10
+    },
+    listItem: {
+        padding: 10,
+        marginVertical: 10,
+        backgroundColor: 'pink'
     }
-
-})
-
-
-const App = () => {
-    // inline style 
-    return <View style={styles.container}>
-        <Text style={styles.text}>
-            Welcome to React Native
-        </Text>
-    </View>
-}
-export default App;
-.....................................................................................
-		How to simplify the code using object destructuring
-.....................................................................................
-import { View, Text, StyleSheet } from "react-native"
+});
+///////////////////////////////////////////////////////////////////////////////////////////
+Layouts:
+........
+-Every UI, Design starts with box, Box model.
+-Every Element/Widget/Component is a box.
 
 
-// const App = () => {
-//     // inline style 
-//     return <View style={{backgroundColor:'pink'}}>
-//         <Text>
-//             Welcome to React Native
-//         </Text>
-//     </View>
-// }
+Every Box has the following properties
 
-//external style object 
-// const styles = StyleSheet.create({
-//     backgroundColor: 'yellow'
-// })
+1.width
+2.height
+
+measurements are specified using device px, in react native we dont tell units.
+
+ width: 100px / 100% -html
+
+The value of width  of an component , in general the "width of container"
+The value of height of an component ,the component height.
+
+space :
+
+Space can allocated of an component 
+
+1.margin
+   The space allocated outside component
+2.padding
+  The space allocated inside component
+
+
+
+Faces of widget:
+................
+
+Clock wise order
+ Top---Right---bottom--left
+
+space allocation based on sides
+
+leftMargin:10
+rightMargin:10
+topMargin:10
+bottomMargin:10
+
+padding : left,right,top,bottom
+
+Allocate 10px padding and margin equally in all sides
+
+padding : 10
+
+margin :10
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+******************************************************************************************
+
+Layout types in css:
+
+1.box layout - height,width,float,alignments
+2.grid layout.
+3.flex box
+
+
+Flex Box:
+
+What is flex box / flex?
+
+The flex box is specification introduced in css  to build responsive web application alternate to grid layout.
+
+flexbox is one dimensional layout model, where as gird layout is two dimensional layout.
+
+Any layout is box based design
+
+layout is rendered as row-column coimbation : two dimensional layout
+     "Grid"
+
+layout is rendered either row or column direction ; one dimensional layout 
+     "Flex"
+
+React Native uses Flex box 
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout#guides
+
+Flex box basics:
+
+Axes of Flex:
+ There are two types of axes
+
+1.Main axis
+2.Cross axis
+
+How to activate the flex layout?
+
+ Flex layout is already activated in side every react native elements.
+
+we can override flex property
+eg:
+
+flex : 1 
+
+container and child:
+
+Container is an Component , inside we lay out other elements called childrens
+
+ if you set flex property, child elements layout will be decided based on parent element.
+
+The main axis is defined by "flex-direction" which has four values
+
+ row
+ row-reverse
+ column
+ column-reverse
+
+ flexDirection: row | column | row-reverse | column-reverse
+
+flex
+
+ <View style={styles.container}>
+        <Text style={styles.headerStyle}>flex</Text>
+          <View style={{flex: 1, backgroundColor: '#EE2C38'}} />
+          <View style={{flex: 2, backgroundColor: '#FAA030'}} />
+          <View style={{flex: 3, backgroundColor: '#32B76C'}} />
+        </View>
+  </View>
+
+flex will define how your items are going to “fight” over the available space along your primary axis.
+
+Most of the time you will want your app container to be flex:1 to take all of the screen height.
+
+Space will be divided according to each element flex property. 
+
+In the following example the red, yellow and the green views are all children in the container view that got flex:1. 
+
+The red view got flex:1 , the yellow view got flex:2 and the green view got flex:3 . 
+
+1+2+3=6 which means that red view will get 1/6 of the space, the yellow 2/6 of the space and the red 3/6 of the space. I think you got it…
+
+
+Child elements takes the space of parent element - lets say partent has 100px
+ now i want two child elements - one need 50px another 50px
+  3 elements - 30, 50 ? 20
+
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native'
 
 // const styles = StyleSheet.create({
 //     container: {
-//         backgroundColor: 'yellow'
+//         flex: 1,
+//         flexDirection: 'row', //column,column-reverse,row-reverse
+//         backgroundColor: 'brown',
+//         paddingTop: 50
 //     },
-//     text: {
-//         fontSize: 100,
-//         color: "red",
-//     }
+// });
 
-// })
+// const App = () => {
 
-const { container, text } = StyleSheet.create({
+//     {/**container */ }
+//     return <View style={styles.container}>
+//         <View style={{ backgroundColor: 'yellow', width: 50, height: 50 }}>
+//             <Text>Box-1</Text>
+//         </View>
+//         <View style={{ backgroundColor: 'pink', width: 50, height: 50 }}>
+//             <Text>Box-2</Text>
+//         </View>
+//         <View style={{ backgroundColor: 'lightblue', width: 50, height: 50 }}>
+//             <Text>Box-3</Text>
+//         </View>
+//     </View>
+
+// }
+
+// const App = () => {
+
+//     {/**container */ }
+//     return <View style={styles.container}>
+//         <View  style={{ flex:1, backgroundColor: 'yellow', width: 50, height: 50 }}>
+//             <Text>Box-1</Text>
+//         </View>
+//         <View style={{ flex:1, backgroundColor: 'pink', width: 50, height: 50 }}>
+//             <Text>Box-2</Text>
+//         </View>
+//         <View style={{ flex:3, backgroundColor: 'lightblue', width: 50, height: 50 }}>
+//             <Text>Box-3</Text>
+//         </View>
+//     </View>
+
+// }
+const App = () => {
+    return (<View style={styles.container}>
+        <Text style={styles.headerStyle}>flex</Text>
+        <View style={[{ flex: 1 }, styles.elementsContainer]}>
+            <View style={{ flex: 1, backgroundColor: '#EE2C38' }} />
+            <View style={{ flex: 2, backgroundColor: '#FAA030' }} />
+            <View style={{ flex: 4, backgroundColor: '#32B76C' }} />
+        </View>
+    </View>
+    );
+}
+
+
+const styles = {
     container: {
-        backgroundColor: 'yellow'
+        marginTop: 48,
+        flex: 1,
+        backgroundColor:'pink'
     },
-    text: {
-        fontSize: 100,
-        color: "blue",
+    headerStyle: {
+        fontSize: 36,
+        textAlign: 'center',
+        fontWeight: '100',
+        marginBottom: 24
+    },
+    elementsContainer: {
+        backgroundColor: 'black',
+        marginLeft: 24,
+        marginRight: 24,
+        marginBottom: 24
     }
+}
 
+
+export default App;
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+Array of Elements:
+.................
+import React from 'react';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Users } from './mock-data/users';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'pink',
+        flexDirection:'column',
+        padding:50
+    }
 })
 
-
 const App = () => {
-    // inline style 
-    return <View style={container}>
-        <Text style={text}>
-            Welcome to React Native
-        </Text>
+    return <View style={styles.container}>
+        {
+            Users.map((user, index) => {
+                return <View style={{padding:30}} key={index}>
+                    <Text>{user.name}</Text>
+                </View>
+            })
+        }
     </View>
 }
 export default App;
-.....................................................................................
-Tasks:
 
-1. Component Composition - Layouts
-2. Props - objects,primitives
-3. Component driven design - props from parent to child and child to its child
-.....................................................................................
+if you look the result in this app, all elements are not displayed, we need to scrollbar.
+
+ScrollView:
+...........
+import React from 'react';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Users } from './mock-data/users';
+import Constants from 'expo-constants';
+
+// const styles = StyleSheet.create({
+
+//     container: {
+//         flex: 1,
+//         backgroundColor: 'pink',
+//         flexDirection: 'column',
+//     },
+//     scrollView: {
+//         backgroundColor: 'yellow',
+//         marginHorizontal: 20,
+//     }
+// })
+
+// const App = () => {
+//     return <View style={styles.container}>
+//         {
+//             Users.map((user, index) => {
+//                 return <ScrollView style={styles.scrollView} key={index}>
+//                     <Text>{user.name}</Text>
+//                 </ScrollView>
+//             })
+//         }
+//     </View>
+// }
+// export default App;
+
+export default function App() {
+    return (
+        <View style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+                <Text style={styles.text}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                    sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                    est laborum.
+                </Text>
+                {
+                    Users.map((user, index) => {
+                        return <Text>{user.name}</Text>
+                    })
+                }
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: Constants.statusBarHeight,
+    },
+    scrollView: {
+        backgroundColor: 'pink',
+        marginHorizontal: 20,
+    },
+    text: {
+        fontSize: 42,
+    },
+});
+//////////////////////////////////////////////////////////////////////////////////////////////
+
