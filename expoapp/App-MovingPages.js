@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './Pages/Home'
 import Details from './Pages/Details'
-import TodoList from './Pages/TodoList';
 
 
 const { Navigator, Screen } = createStackNavigator()
@@ -15,8 +14,6 @@ export default function App() {
     return <NavigationContainer>
         <Navigator>
             <Screen name="Home" options={{title:'IBM Learning App'}} component={Home} />
-            <Screen name="TodoList" component={TodoList} />
-
             <Screen name="Details" component={Details} />
         </Navigator>
     </NavigationContainer>

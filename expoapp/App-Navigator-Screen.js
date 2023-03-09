@@ -2,22 +2,29 @@ import { StyleSheet, View, Text } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
-import Home from './Pages/Home'
-import Details from './Pages/Details'
-import TodoList from './Pages/TodoList';
 
-
+// const Stack = createStackNavigator();
 const { Navigator, Screen } = createStackNavigator()
+const Home = () => {
+    return <View style={styles.container}>
+        <Text>Home</Text>
+    </View>
+}
 
+// export default function App() {
+//     // In React Navigation Super Most Parent Component is NavigationContainer
+//     return <NavigationContainer>
+//         <Stack.Navigator>
+//             <Stack.Screen name="Home" component={Home} />
+//         </Stack.Navigator>
+//     </NavigationContainer>
+// }
 
 export default function App() {
     // In React Navigation Super Most Parent Component is NavigationContainer
     return <NavigationContainer>
         <Navigator>
-            <Screen name="Home" options={{title:'IBM Learning App'}} component={Home} />
-            <Screen name="TodoList" component={TodoList} />
-
-            <Screen name="Details" component={Details} />
+            <Screen name="Home" component={Home} />
         </Navigator>
     </NavigationContainer>
 }
