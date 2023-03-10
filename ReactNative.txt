@@ -2322,3 +2322,1873 @@ const styles = StyleSheet.create({
     },
 });
 
+........................
+Initial params#
+You can also pass some initial params to a screen. If you didn't specify any params when navigating to this screen, the initial params will be used. They are also shallow merged with any params that you pass. Initial params can be specified with an initialParams prop:
+
+<Stack.Screen
+  name="Details"
+  component={DetailsScreen}
+  initialParams={{ itemId: 42 }}
+/>
+
+
+
+import * as React from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+//stack navigator
+import { createStackNavigator } from '@react-navigation/stack'
+
+//create Stack Object
+const { Navigator, Screen } = createStackNavigator();
+
+const HomeScreen = props => {
+    const { navigation, route } = props;
+    return <View style={styles.container}>
+        <Text>Home Screen : {props.extraData}</Text>
+        <Button title="Go to Details" onPress={() => navigation.navigate('Details')} />
+    </View>
+}
+const DetailsScreen = (props) => {
+    const { navigation, route } = props;
+    console.log(route.params);
+    return (
+        <View style={styles.container}>
+            <Text>Details Screen : {route.params.id} - {route.params.item}</Text>
+            <Button
+                title="Go to Details... again"
+                onPress={() => {
+                    // navigation.push('Details', {
+                    //     id: Math.floor(Math.random() * 100),
+                    // })
+                    navigation.setParams({ id: 900, item: 'foo' })
+                }
+                }
+            />
+        </View>
+    );
+}
+
+export default function App() {
+    return <NavigationContainer>
+        <Navigator initialRouteName="Home">
+            <Screen name="Home" component={HomeScreen} options={{ title: 'Welcome to Start Token' }} />
+            <Screen name="Details" initialParams={{ id: 1, item: 'React Native v2' }} component={DetailsScreen} />
+        </Navigator>
+    </NavigationContainer>
+}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+///////////////////////////////////////////////////////////////////////////////////////////
+Passing params to a previous screen#
+
+Params aren't only useful for passing some data to a new screen, but they can also be useful to pass data to a previous screen too. For example, let's say you have a screen with a create post button, and the create post button opens a new screen to create a post. After creating the post, you want to pass the data for the post back to previous screen.
+
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { View, Text, Button, TextInput } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const { Navigator, Screen } = createStackNavigator();
+
+function HomeScreen({ navigation, route }) {
+
+    React.useEffect(() => {
+        if (route.params?.post) {
+            // Post updated, do something with `route.params.post`
+            // For example, send the post to the server
+        }
+    }, [route.params?.post]);
+
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Button
+                title="Create post"
+                onPress={() => navigation.navigate('CreatePost')}
+            />
+            <Text style={{ margin: 10 }}>Post: {route.params?.post}</Text>
+        </View>
+    );
+}
+
+function CreatePostScreen({ navigation, route }) {
+    const [postText, setPostText] = React.useState('');
+
+    return (
+        <>
+            <TextInput
+                multiline
+                placeholder="What's on your mind?"
+                style={{ height: 200, padding: 10, backgroundColor: 'green' }}
+                value={postText}
+                onChangeText={setPostText}
+            />
+            <Button
+                title="Done"
+                onPress={() => {
+                    // Pass params back to home screen
+                    navigation.navigate('Home', { post: postText });
+                }}
+            />
+        </>
+    );
+}
+
+export default function App() {
+    return (
+        <NavigationContainer>
+            <Navigator initialRouteName="Home">
+                <Screen name="Home" options={{ title: 'Welcome to Start Token' }}>
+                    {props => <HomeScreen {...props} extraData={"Start Token"} />}
+                </Screen>
+
+                <Screen component={CreatePostScreen} name="CreatePost" />
+
+            </Navigator>
+        </NavigationContainer>
+    );
+}
+
+
+What should be in params#
+It's important to understand what kind of data should be in params. Params are like options for a screen. They should only contain information to configure what's displayed in the screen. Avoid passing the full data which will be displayed on the screen itself (e.g. pass an user id instead of user object). Also avoid passing data which is used by multiple screens, such data should be in a global store.
+
+You can also think of the route object like a URL. If your screen had a URL, what should be in the URL? Params shouldn't contain data that you think should not be in the URL. This often means that you should keep as little data as possible needed to determine what the screen is. Think of visiting a shopping website, when you are seeing product listings, the URL usually contains category name, type of sort, any filters etc., it doesn't contain the actual list of products displayed on the screen.
+
+For example, say if you have a Profile screen. When navigating to it, you might be tempted to pass the user object in the params:
+
+
+// Don't do this
+navigation.navigate('Profile', {
+  user: {
+    id: 'jane',
+    firstName: 'Jane',
+    lastName: 'Done',
+    age: 25,
+  },
+});
+This looks convenient, and lets you access the user objects with route.params.user without any extra work.
+
+
+Recap:
+navigate and push accept an optional second argument to let you pass parameters to the route you are navigating to. For example: navigation.navigate('RouteName', { paramName: 'value' }).
+You can read the params through route.params inside a screen
+You can update the screen's params with navigation.setParams
+Initial params can be passed via the initialParams prop on Screen
+Params should contain the minimal data required to show a screen, nothing more.
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Configuring the header bar
+
+We've seen how to configure the header title already, but let's go over that again before moving on to some other options
+
+A Screen component accepts options prop which is either an object or a function that returns an object, that contains various configuration options. The one we use for the header title is title, as shown in the following example.
+
+    <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'My home' }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={({ route }) => ({ title: route.params.name })}
+        />
+
+
+function StackScreen() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'My home' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Profile"
+        onPress={() =>
+          navigation.navigate('Profile', { name: 'Custom profile header' })
+        }
+      />
+    </View>
+  );
+}
+
+function ProfileScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Profile screen</Text>
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'My home' }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={({ route }) => ({ title: route.params.name })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+Updating options with setOptions#
+.................................
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+function HomeScreen({ navigation }) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Home Screen</Text>
+        <Button
+          title="Update the title"
+          onPress={() => navigation.setOptions({ title: 'Updated!' })}
+        />
+      </View>
+    );
+  }
+  
+  const Stack = createStackNavigator();
+  
+  function App() {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ title: 'My home' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  
+  export default App;
+///////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Adjusting header styles#
+.........................
+
+
+There are three key properties to use when customizing the style of your header: headerStyle, headerTintColor, and headerTitleStyle.
+
+headerStyle: a style object that will be applied to the View that wraps the header. If you set backgroundColor on it, that will be the color of your header.
+
+headerTintColor: the back button and title both use this property as their color. In the example below, we set the tint color to white (#fff) so the back button and the header title would be white.
+
+headerTitleStyle: if we want to customize the fontFamily, fontWeight and other Text style properties for the title, we can use this to do it.
+
+
+There are three key properties to use when customizing the style of your header: headerStyle, headerTintColor, and headerTitleStyle.
+
+headerStyle: a style object that will be applied to the View that wraps the header. If you set backgroundColor on it, that will be the color of your header.
+headerTintColor: the back button and title both use this property as their color. In the example below, we set the tint color to white (#fff) so the back button and the header title would be white.
+headerTitleStyle: if we want to customize the fontFamily, fontWeight and other Text style properties for the title, we can use this to do it.
+
+import * as React from 'react';
+import { View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'My home',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Sharing common options across screens#
+
+It is common to want to configure the header in a similar way across many screens. For example, your company brand color might be red and so you want the header background color to be red and tint color to be white. Conveniently, these are the colors we're using in our running example, and you'll notice that when you navigate to the DetailsScreen the colors go back to the defaults. Wouldn't it be awful if we had to copy the options header style properties from HomeScreen to DetailsScreen, and for every single screen component we use in our app? Thankfully, we do not. We can instead move the configuration up to the stack navigator under the prop screenOptions
+
+<Stack.Navigator   screenOptions={
+   {
+     headerStyle : { 
+         backgroundColor:'pink'
+     }
+   }
+ } >
+
+</Stack.Navigator>
+
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
+
+function HomeScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>Home Screen</Text>
+            <Button
+                title="Profile "
+                onPress={() => navigation.navigate('Profile')}
+            />
+        </View>
+    );
+}
+
+function ProfileScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>Profile screen</Text>
+            <Button title="Go back" onPress={() => navigation.goBack()} />
+        </View>
+    );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+    return (
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#f4511e' } }}>
+                <Stack.Screen
+                    name="Home"
+                    component={HomeScreen}
+                    options={{ title: 'Home Screen' }}
+                />
+                <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{ title: 'Profile Screen' }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer >
+    );
+}
+
+export default App;
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+Redux-React Native -Navigation:
+
+ <Provider>
+ <NavigationContainer>
+    <Navigator>
+      <Screen/>
+     <Screen/>
+ <Navigator/>
+ <NavigationContainer/>
+ </Provider>
+
+
+import * as React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { Provider, connect } from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+// A very simple reducer
+function counter(state, action) {
+    if (typeof state === 'undefined') {
+        return 0;
+    }
+
+    switch (action.type) {
+        case 'INCREMENT':
+            return state + 1;
+        case 'DECREMENT':
+            return state - 1;
+        default:
+            return state;
+    }
+}
+
+// A very simple store
+let store = createStore(combineReducers({ count: counter }));
+
+// A screen!
+function Counter({ count, dispatch, navigation }) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.paragraph}>{count}</Text>
+            <Button
+                title="Increment"
+                onPress={() => dispatch({ type: 'INCREMENT' })}
+            />
+            <Button
+                title="Decrement"
+                onPress={() => dispatch({ type: 'DECREMENT' })}
+            />
+
+            <Button
+                title="Go to static count screen"
+                onPress={() =>
+                    navigation.navigate('StaticCounter', {
+                        count,
+                    })
+                }
+            />
+        </View>
+    );
+}
+
+// Another screen!
+function StaticCounter({ route }) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.paragraph}>{route.params.count}</Text>
+        </View>
+    );
+}
+
+// Connect the screens to Redux
+let CounterContainer = connect(state => ({ count: state.count }))(Counter);
+
+// Create our stack navigator
+let RootStack = createStackNavigator();
+
+// Render the app container component with the provider around it
+export default function App() {
+    return (
+        <Provider store={store}>
+            <NavigationContainer>
+                <RootStack.Navigator>
+                    <RootStack.Screen name="Counter" component={CounterContainer} />
+                    <RootStack.Screen
+                        name="StaticCounter"
+                        component={StaticCounter}
+                        options={({ route }) => ({ title: route.params.count })}
+                    />
+                </RootStack.Navigator>
+            </NavigationContainer>
+        </Provider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#ecf0f1',
+        padding: 8,
+    },
+    paragraph: {
+        margin: 24,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+});
+//////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Other Navigations:
+
+1.Tab Navigation:
+....................
+
+Possibly the most common style of navigation in mobile apps is tab-based navigation. This can be tabs on the bottom of the screen or on the top below the header (or even instead of a header).
+
+
+This guide covers createBottomTabNavigator. You may also use createMaterialBottomTabNavigator and createMaterialTopTabNavigator to add tabs to your application.
+
+Before continuing, first install @react-navigation/bottom-tabs:
+
+npm install @react-navigation/bottom-tabs
+
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
+
+
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+//////////////////////////////////////////////////////////////////////////////////
+
+Tab Buttons and Icons:
+
+npm install --save react-native-vector-icons
+
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'ios-list-box' : 'ios-list';
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+//////////////////&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&///////////////////////////////////
+
+Tab + Stack Coimbation:
+.......................
+
+
+import * as React from 'react';
+import { Button, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+
+function HomeScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Home screen</Text>
+            <Button
+                title="Go to Details"
+                onPress={() => navigation.navigate('Details')}
+            />
+        </View>
+    );
+}
+
+function DetailsScreen() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Details!</Text>
+        </View>
+    );
+}
+function SettingsScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Settings screen</Text>
+            <Button
+                title="Go to Details"
+                onPress={() => navigation.navigate('Details')}
+            />
+        </View>
+    );
+}
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+    return (
+        <HomeStack.Navigator>
+            <HomeStack.Screen name="Home" component={HomeScreen} />
+            <HomeStack.Screen name="Details" component={DetailsScreen} />
+        </HomeStack.Navigator>
+    );
+}
+
+const SettingsStack = createStackNavigator();
+function SettingsStackScreen() {
+    return (
+        <SettingsStack.Navigator>
+            <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+            <SettingsStack.Screen name="Details" component={DetailsScreen} />
+        </SettingsStack.Navigator>
+    );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeStackScreen} />
+          <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Drawer Navigation:
+.................
+npm install @react-navigation/drawer
+
+
+import * as React from 'react';
+import { Button, View,Text } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Drawer = createDrawerNavigator();
+
+function HomeScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>Home Screen</Text>
+            <Button
+                onPress={() => navigation.navigate('Notifications')}
+                title="Go to notifications"
+            />
+        </View>
+    );
+}
+function NotificationsScreen({ navigation }) {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>Notifications Screen</Text>
+            <Button onPress={() => navigation.goBack()} title="Go back home" />
+        </View>
+    );
+}
+
+export default function App() {
+    return (
+        <NavigationContainer>
+            <Drawer.Navigator initialRouteName="Home">
+                <Drawer.Screen name="Home" component={HomeScreen} />
+                <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+            </Drawer.Navigator>
+        </NavigationContainer>
+    );
+}
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+
+function Feed({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Feed Screen</Text>
+      <Button title="Open drawer" onPress={() => navigation.openDrawer()} />
+      <Button title="Toggle drawer" onPress={() => navigation.toggleDrawer()} />
+    </View>
+  );
+}
+
+function Notifications() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Notifications Screen</Text>
+    </View>
+  );
+}
+
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Close drawer"
+        onPress={() => props.navigation.closeDrawer()}
+      />
+      <DrawerItem
+        label="Toggle drawer"
+        onPress={() => props.navigation.toggleDrawer()}
+      />
+    </DrawerContentScrollView>
+  );
+}
+
+const Drawer = createDrawerNavigator();
+
+function MyDrawer() {
+  return (
+    <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Feed" component={Feed} />
+      <Drawer.Screen name="Notifications" component={Notifications} />
+    </Drawer.Navigator>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyDrawer />
+    </NavigationContainer>
+  );
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Recap:
+
+1.Stack Navigator
+2.Tab Navigator
+3.Drawer Navigator
+/////////////////////////////////////////////////////////////////////////////////////////////
+           Device features-Mobile App Components-React Native Advanced Components
+..............................................................................................
+
+In order to work with Device features:
+
+When you are creating an app that requires access to potentially senstive information on 
+user's device, such as their location, contacts,camera ...you need to ask for the user's
+permission first.
+
+How to get permission from the device?
+
+expo provides an module to work with permissions on both platforms.
+
+$ expo install expo-permissions
+
+Note : if you are working with particular device feature, device specific permission
+package must also be installed
+
+
+Permission type	Packages
+
+NOTIFICATIONS	expo-notifications
+
+USER_FACING_NOTIFICATIONS	expo-notifications
+
+LOCATION	expo-location
+
+CAMERA	expo-barcode-scanner expo-camera 
+        expo-face-detector expo-image-picker expo-media-library
+
+AUDIO_RECORDING	expo-av
+
+CONTACTS	expo-contacts
+
+MEDIA_LIBRARY MEDIA_LIBRARY_WRITE_ONLY	expo-image-picker
+                                        expo-media-library
+CALENDAR	expo-calendar
+
+REMINDERS	expo-calendar
+
+SYSTEM_BRIGHTNESS expo-brightness
+
+MOTION   expo-sensors	
+
+
+import * as Permission from 'expo-permission'
+
+Objects:
+
+1.PermissionResponse
+
+ status: 'granted'|'denied'|'undermined'
+ granted: boolean
+ expires: 'never' | number
+ 
+
+............................................................................................
+
+Note: how to work with async await inside useEffect hook?
+
+useEffect(() => {
+        fetch('https://reactnative.dev/movies.json')
+            .then((response) => response.json())
+            .then((json) => setData(json.movies))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+
+        async function init() {
+            try {
+                const response = await fetch('https://reactnative.dev/movies.json')
+                const json = await response.json();
+                const data = json.movies;
+                setData(data);
+            }
+            catch (e) {
+                console.log(error)
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+        init();
+         //IIFE Syntax
+         (async function(){
+            try {
+                const response = await fetch('https://reactnative.dev/movies.json')
+                const json = await response.json();
+                const data = json.movies;
+                setData(data);
+            }
+            catch (e) {
+                console.log(error)
+            }
+            finally {
+                setLoading(false)
+            }
+         })();
+
+    }, []);
+
+
+
+Location: GPS
+
+expo-location allows reading geolocation information from the device.
+
+$expo install expo-location
+
+How to access Location Object?
+
+ import * as Location from 'expo-location'
+
+Permissions api always return promises, instead of using thenables we can use async...await..
+
+import React, { useState, useEffect } from 'react';
+import { Platform, Text, View, StyleSheet } from 'react-native';
+import * as Location from 'expo-location';
+
+export default function App() {
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    useEffect(() => {
+        //write IIFE Function to wrap async...await logic
+        (async () => {
+            let { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+            let location = await Location.getCurrentPositionAsync({});
+            console.log(location)
+            setLocation(location);
+
+        })()
+
+    }, []);
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = JSON.stringify(location);
+    }
+
+    return (<View style={styles.container}>
+        <Text style={{ fontSize: 10 }}>{text}</Text>
+    </View>
+    );
+
+
+}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+How to integrate Map with Location?
+
+npm install react-native-maps
+import React from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import MapView from 'react-native-maps';
+
+
+export default function App() {
+    return (
+        <View style={styles.container}>
+            <MapView style={styles.map} initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }} />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    map: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
+});
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+Map and Location:
+................
+
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import MapView from 'react-native-maps';
+import * as Location from 'expo-location';
+
+export default function App() {
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        })();
+    }, []);
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = JSON.stringify(location);
+        console.log(location);
+    }
+    if (!location) {
+        return <View style={styles.container}>
+            <Text>No Location found!</Text>
+        </View>
+    }
+
+    return (<MapView style={{ flex: 1 }} initialRegion={{
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    }} provider={MapView.PROVIDER_GOOGLE} />);
+
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    map: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
+});
+/////////////////////////////////////////////////////////////////////////////////////////////
+How to access Contacts?
+
+expo-contacts proivdes access to the devices system contacts, allowing you to get contact
+information as well as adding , editing, removing contacts.
+
+expo install expo-contacts
+
+You need to access Permission: Permissions.CONTACTS
+
+
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
+import * as Contacts from 'expo-contacts';
+
+
+export default function App() {
+    const [names, setNames] = useState([])
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Contacts.requestPermissionsAsync();
+            if (status === 'granted') {
+                //will Return ContactResponse ; data; hasNextPage,hasPreviousNext
+                const contactResponse = await Contacts.getContactsAsync();
+                //ContactResponse has data property which will return arrayof contact
+                const contactList = contactResponse.data;
+                //console.log(contactList);
+                setNames(contactList)
+           
+            }
+        })();
+    }, []);
+
+    return (
+        <View style={styles.container}>
+            <FlatList keyExtractor={(item) => item.id} data={names}
+                renderItem={({ item }) => {
+                    return (<Text style={styles.item}>{item.firstName}</Text>)
+                }} />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    item: {
+        flex: 1,
+        marginHorizontal: 10,
+        marginTop: 25,
+        padding: 30,
+        backgroundColor: 'pink',
+        fontSize: 24
+    }
+});
+///////////////////////////////////////////////////////////////////////////////////////////////
+Media Api:
+.........
+
+Video and audio:
+...............
+
+expo install expo-av
+
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import { Video, AVPlaybackStatus } from 'expo-av';
+
+export default function App() {
+  const video = useRef(null);
+  const [status, setStatus] = useState({});
+  return (
+    <View style={styles.container}>
+      <Video
+        ref={video}
+        style={styles.video}
+        source={{
+          uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+        }}
+        useNativeControls
+        resizeMode="contain"
+        isLooping
+        onPlaybackStatusUpdate={status => setStatus(() => status)}
+      />
+      <View style={styles.buttons}>
+        <Button
+          title={status.isPlaying ? 'Pause' : 'Play'}
+          onPress={() =>
+            status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+          }
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 200,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////
+Network
+expo-network provides useful information about the device's network such as its IP address, MAC address, and airplane mode status.
+
+expo install expo-network
+
+Configuration
+On Android, this module requires permissions to access the network and Wi-Fi state. The permissions ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE are added automatically.
+
+import * as Network from 'expo-network';
+
+Network.getNetworkStateAsync()
+Network.getIpAddressAsync()
+Network.getMacAddressAsync(interfaceName?)
+Network.isAirplaneModeEnabledAsync() (Android only)
+
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import * as Network from 'expo-network';
+
+export default function App() {
+  useEffect(() => {
+    (async () => {
+      const ip = await Network.getIpAddressAsync();
+      console.log(ip)
+    })();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Network Module</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+///////////////////////////////////////////////////////////////////////////////////////////
+
+Storage: 
+
+ How to store data in mobile device.
+
+expo-sqlite gives your app access to a database that can be queried through a WebSQL-like API. The database is persisted across restarts of your app.
+
+expo install expo-sqlite
+
+How to use sqllite in our project?
+
+import * as SQLite from 'expo-sqlite';
+
+Database db = SQLite.openDatabase(name,version,desc,size)
+
+
+Database Object methods
+
+Database objects are returned by calls to SQLite.openDatabase(). Such an object represents a connection to a database on your device. They support one method:
+
+db.transaction(callback, error, success)-Execute a database transaction.
+
+A Transaction object is passed in as a parameter to the callback parameter for the db.transaction() method on a Database . It allows enqueuing SQL statements to perform in a database transaction. It supports one method:
+
+tx.executeSql(sqlStatement, arguments, success, error)
+
+ResultSet objects
+
+ResultSet objects are returned through second parameter of the success callback for the tx.executeSql() method on a Transaction
+
+
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Constants from 'expo-constants';
+import * as SQLite from 'expo-sqlite';
+
+
+const db = SQLite.openDatabase("db.db");
+
+function Items({ done: doneHeading, onPressItem }) {
+    const [items, setItems] = React.useState(null);
+
+    React.useEffect(() => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `select * from items where done = ?;`,
+                [doneHeading ? 1 : 0],
+                (_, { rows: { _array } }) => setItems(_array)
+            );
+        });
+    }, []);
+
+    const heading = doneHeading ? "Completed" : "Todo";
+
+    if (items === null || items.length === 0) {
+        return null;
+    }
+
+    return (
+        <View style={styles.sectionContainer}>
+            <Text style={styles.sectionHeading}>{heading}</Text>
+            {items.map(({ id, done, value }) => (
+                <TouchableOpacity
+                    key={id}
+                    onPress={() => onPressItem && onPressItem(id)}
+                    style={{
+                        backgroundColor: done ? "#1c9963" : "#fff",
+                        borderColor: "#000",
+                        borderWidth: 1,
+                        padding: 8
+                    }}
+                >
+                    <Text style={{ color: done ? "#fff" : "#000" }}>{value}</Text>
+                </TouchableOpacity>
+            ))}
+        </View>
+    );
+}
+
+export default function App() {
+    const [text, setText] = React.useState(null)
+    const [forceUpdate, forceUpdateId] = useForceUpdate()
+
+ 
+
+    React.useEffect(() => {
+        db.transaction(tx => {
+            tx.executeSql(
+                "create table if not exists items (id integer primary key not null, done int, value text);"
+            );
+        });
+    }, []);
+
+    const add = (text) => {
+        // is text empty?
+        if (text === null || text === "") {
+            return false;
+        }
+
+        db.transaction(
+            tx => {
+                tx.executeSql("insert into items (done, value) values (0, ?)", [text]);
+                tx.executeSql("select * from items", [], (_, { rows }) =>
+                    console.log(JSON.stringify(rows))
+                );
+            },
+            null,
+            forceUpdate
+        );
+    }
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.heading}>SQLite Example</Text>
+            <View style={styles.flexRow}>
+                <TextInput
+                    onChangeText={text => setText(text)}
+                    onSubmitEditing={() => {
+                        add(text);
+                        setText(null);
+                    }}
+                    placeholder="what do you need to do?"
+                    style={styles.input}
+                    value={text}
+                />
+            </View>
+            <ScrollView style={styles.listArea}>
+                <Items
+                    key={`forceupdate-todo-${forceUpdateId}`}
+                    done={false}
+                    onPressItem={id =>
+                        db.transaction(
+                            tx => {
+                                tx.executeSql(`update items set done = 1 where id = ?;`, [
+                                    id
+                                ]);
+                            },
+                            null,
+                            forceUpdate
+                        )
+                    }
+                />
+                <Items
+                    done
+                    key={`forceupdate-done-${forceUpdateId}`}
+                    onPressItem={id =>
+                        db.transaction(
+                            tx => {
+                                tx.executeSql(`delete from items where id = ?;`, [id]);
+                            },
+                            null,
+                            forceUpdate
+                        )
+                    }
+                />
+            </ScrollView>
+        </View>
+    );
+
+}
+
+function useForceUpdate() {
+    const [value, setValue] = useState(0);
+    return [() => setValue(value + 1), value];
+}
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: "#fff",
+        flex: 1,
+        paddingTop: Constants.statusBarHeight
+    },
+    heading: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    flexRow: {
+        flexDirection: "row"
+    },
+    input: {
+        borderColor: "#4630eb",
+        borderRadius: 4,
+        borderWidth: 1,
+        flex: 1,
+        height: 48,
+        margin: 16,
+        padding: 8
+    },
+    listArea: {
+        backgroundColor: "#f0f0f0",
+        flex: 1,
+        paddingTop: 16
+    },
+    sectionContainer: {
+        marginBottom: 16,
+        marginHorizontal: 16
+    },
+    sectionHeading: {
+        fontSize: 18,
+        marginBottom: 8
+    }
+});
+/////////////////////////////////////////////////////////////////////////////////////////////
+Redux Advanced Features:
+........................
+
+How to write more reducers,More components.
+
+Points:
+
+1.We can have more reducers
+2.We can have only one store.
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { createStore, combineReducers } from 'redux';
+import { connect, Provider } from 'react-redux';
+
+//action constants
+const INCREMENT = 'INCREMENT'
+const DECREMENT = 'DECREMENT';
+
+//reducer
+const incrementReducer = (state = 10, { type }) => {
+    switch (type) {
+        case INCREMENT:
+            return state + 1;
+        default:
+            return state;
+    }
+};
+const decrementReducer = (state = 100, { type }) => {
+    switch (type) {
+        case DECREMENT:
+            return state - 1;
+        default:
+            return state;
+    }
+};
+
+// const rootReducer = combineReducers({
+//     increment: incrementReducer,
+//     decrement: decrementReducer
+// });
+// const rootReducer = combineReducers({
+//     incrementReducer: incrementReducer,
+//     decrementReducer: decrementReducer
+// });
+const rootReducer = combineReducers({
+    incrementReducer,
+    decrementReducer
+});
+
+//create store
+const store = createStore(rootReducer);
+
+// store.subscribe(function () {
+//     console.log(store.getState());
+// });
+
+// store.dispatch({ type: INCREMENT })
+//Create Containers
+/////////////////////////////////////////////////////////////////////////////////
+//Mapper function: extract data from redux reducer(state) supply to React Component(props)
+//here we two reducer, then how to mapper function
+
+// function mapStateToPropIncr(state) {
+//     const value = state.incrementReducer
+//     return {
+//         incvalue: value
+//     }
+// }
+const mapStateToPropIncr = state => {
+    const incvalue = state.incrementReducer
+    return {
+        incvalue
+    }
+}
+
+const mapStateToPropDecr(state) => {
+    const decvalue = state.decrementReducer
+    return {
+        decvalue
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+function IncrementComponent(props) {
+    //event listener
+    function onIncrement(e) {
+        //TODO
+        props.dispatch({ type: INCREMENT })
+    }
+    return <View>
+        <Text>Increment : {props.incvalue}</Text>
+        <Button onPress={onIncrement} title="+" />
+    </View>
+}
+function DecrementComponent(props) {
+    //event listener
+    function onDecrement(e) {
+        //TODO
+        props.dispatch({ type: DECREMENT })
+    }
+    return <View>
+        <Text>Decrement : {props.decvalue}</Text>
+        <Button onPress={onDecrement} title="-" />
+    </View>
+}
+//create Containers
+const IncrementContainer = connect(mapStateToPropIncr)(IncrementComponent)
+const DecrementContainer = connect(mapStateToPropDecr)(DecrementComponent)
+
+export default function App() {
+    return (<Provider store={store}>
+        <View style={styles.container}>
+            <IncrementContainer />
+            <DecrementContainer />
+            <StatusBar style="auto" />
+        </View>
+    </Provider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Refactored Code : refere  code repository
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+Types of Actions:
+
+1.sync action
+2.async action
+
+Redux work flow: Sync work flow
+
+View(Button)--pressButton---props.dispatch(action)---store---will call reducer--returns state--to store----subscribe method is called----new state is returned to view.
+
+
+Async work flow:
+
+1.where should i write api calls in redux.
+2.where should i write async programming- timers,websocket..?
+
+Reducer? - No
+ Reducer is just function, pure function, returns new state only. it wont have any
+async logic.
+
+Async actions: Redux Middleware and Side Effects#
+.................................................
+
+What is middleware?
+
+ middleware is a js function, which stops calling reducers immediatly until async operations
+are completed.
+
+lets say i want to call api, that should return data to ui.
+
+List Component-------------Expects data from api------
+
+View(Button)--pressButton---props.dispatch(action asking data from api)---store---|stop calling reducer until data is ready.
+
+
+middlewares:
+
+What exactly is middleware?
+
+ Generally speaking middleware is something that goes between parts A and B of an application to transform what A sends before passing it to B. So instead of having:
+ A -----> B
+ we end up having
+ A ---> middleware 1 ---> middleware 2 ---> middleware N --> ... ---> B
+
+how to write middleware ?
+
+middleware is just javascript curry function / higher order function.
+eg: connect is curry function.
+
+Higher order function:
+
+//how to write curry function.
+
+/* function makeCake(milk) {
+      return function (sugar) {
+            return function (bread) {
+                  return function (cream) {
+                        return function (color) {
+                              //coimbine all data and return
+                              return `${milk}${sugar}${bread}${cream}${color}`;
+                        }
+                  }
+            }
+      }
+} */
+const makeCake = milk => sugar => bread => cream => color => `${milk}${sugar}${bread}${cream}${color}`
+//hof
+const cake = makeCake('milk')('sugar')('bread')('cream')('color')
+console.log(cake);
+
+.....................*************...........................................
+
+Middleware syntax:
+
+ const anyMiddleware = function (store) {
+        return function(next) {
+            return function (action) {
+                // your middleware-specific code goes here
+               api call once done,with data, you can do store.dispatch()
+
+               
+            }
+        }
+    }
+
+store:
+  store object here is used to redispatch action once async operation is completed.
+
+next:
+  is just variable used to move from middleware to reducer or another middleare
+ middlewares can be chained
+   a---  b --- c --d --n --reducer
+     next  next 
+
+action:
+  which represents action object 
+
+
+  var anyMiddleware = function (store) {
+        return function(next) {
+            return function (action) {
+                // your middleware-specific code goes here
+
+		return next(action);
+    }
+     
+
+Point:
+
+1.middlewares can be used for various purposes like logging,async wrappers.
+
+//Welcome Middleware 
+const WelcomeMiddleware = function (store) {
+      return function (next) {
+            return function (action) {
+                  // your middleware-specific code goes here
+                  console.info(`Welcome to Redux`);
+                  return next(action);
+            }
+      }
+};
+//Logger Middleware
+/* const Logger = function (store) {
+      return function (next) {
+            return function (action) {
+                  // your middleware-specific code goes here
+                  console.log('dispatching', action)
+                  let result = next(action)
+                  console.log('next state', store.getState())
+                  return result
+            }
+      }
+}; */
+
+How to integrate middlewares to existing redux store?
+
+const middlewareConfig = applyMiddleware(WelcomeMiddleware, Logger);
+
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { incrementReducer, decrementReducer } from './reducers'
+
+//middleware code 
+const WelcomeMiddleware = function (store) {
+    return function (next) {
+        return function (action) {
+            // your middleware-specific code goes here
+            console.info(`Welcome to Redux`);
+            return next(action);
+        }
+    }
+};
+const Logger = function (store) {
+    return function (next) {
+        return function (action) {
+            // your middleware-specific code goes here
+            console.log('dispatching', action)
+            let result = next(action)
+            console.log('next state', store.getState())
+            return result
+        }
+    }
+};
+
+const middlewareConfig = applyMiddleware(WelcomeMiddleware, Logger);
+const rootReducer = combineReducers({
+    incrementReducer,
+    decrementReducer
+});
+//create store
+const store = createStore(rootReducer, middlewareConfig);
+
+export { store }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Types of Middlewares:
+
+1.custom middleware 
+   written by us - Logger,WelcomeMiddleware
+2.third party middlewares
+  provided by third parties
+
+In order to write async operations, there are third party middlewares available.
+
+User---store.dispatch(findAllTodos())------->middleware--->
+	
+ middleware waits for response----->dispatch({type:'FINDALLTODS'},response)-->
+
+	store--->will call reducer with response---reducer is called -->
+		
+		store is updated----->React subscribe the data.
+
+Async Implementations:
+
+1.timers
+2.Rest calls
+3.Web socket calls
+.....
+
+how to dispatch actions?
+
+1.by sending action object
+
+ store.dispatch({type:'INCREMENT',payload:1});
+
+2.by calling action creator ; function
+
+  function incrementCreator(payload){
+
+     //action object 
+     return {
+       type:INCREMENT,
+       payload
+     }
+  }
+
+
+Async Implementation: timers:
+..............................
+
+function incActionCreator(payload) {
+    setTimeout(function () {
+        return {
+            type: INCREMENT,
+            payload
+        }
+    }, 2000)
+}
+export { incActionCreator };
+
+when you call this redux will throw error.
+
+Error: Actions must be plain objects. Use custom middleware for async actions.
+
+
+How to solve this?
+
+We need to use async middlewares which is third party.
+
+Third party async middlewares
+
+1.redux-thunk
+2.redux-promise
+3.redux-saga
+4.redux-observable
+
+
+Setup thunk.
+
+>npm i redux-thunk
+
+//without middleware
+/*function incActionCreator(payload) {
+    setTimeout(function () {
+        return {
+            type: INCREMENT,
+            payload
+        }
+    }, 2000)
+} */
+function incActionCreator(payload) {
+    //thunk middleware syntax
+    return function (dispatch) {
+        setTimeout(function () {
+            dispatch({
+                type: INCREMENT,
+                payload
+            });
+        }, 3000)
+    }
+}
+
+AJAX CALLS: API CALLS
+
+function findAllTodos() {
+      return function (dispatch) {
+            const url = 'http://localhost:9999/todos'
+            fetch(url).then(res => res.json()).then(todos => {
+                  dispatch({
+                        type: FINDALL,
+                        todos
+                  })
+            });
+      }
+
+}
+
+
+
+
+
